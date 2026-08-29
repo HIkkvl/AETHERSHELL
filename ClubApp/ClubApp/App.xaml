@@ -1,0 +1,420 @@
+<Application x:Class="AetherShell.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utils="clr-namespace:AetherShell.Client.Utils"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <utils:ImageUrlConverter x:Key="ImageUrlConverter"/>
+
+        <!-- Figma chat palette: #342735 / #3C2F3D / #FF5ED7 / white 31% -->
+        <Color x:Key="ColorBg">#241820</Color>
+        <Color x:Key="ColorPanel">#342735</Color>
+        <Color x:Key="ColorGlass">#3C2F3D</Color>
+        <Color x:Key="ColorAccent">#FF5ED7</Color>
+        <Color x:Key="ColorAccentDeep">#E04BC0</Color>
+        <Color x:Key="ColorAccentPurple">#8B3A7A</Color>
+        <Color x:Key="ColorMuted">#B8A8B8</Color>
+        <Color x:Key="ColorBorder">#4F4A50</Color>
+
+        <!-- Legacy aliases (keep names used across XAML) -->
+        <Color x:Key="ColorPrimaryGold">#FF5ED7</Color>
+        <Color x:Key="ColorAccentGold">#E04BC0</Color>
+
+        <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource ColorBg}"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource ColorAccent}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource ColorAccent}"/>
+        <SolidColorBrush x:Key="PanelGlassBrush" Color="#CC342735"/>
+        <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource ColorMuted}"/>
+        <SolidColorBrush x:Key="TextWhiteBrush" Color="White"/>
+        <SolidColorBrush x:Key="BorderSubtleBrush" Color="{StaticResource ColorBorder}"/>
+
+        <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF5ED7" Offset="0"/>
+            <GradientStop Color="#8B3A7A" Offset="1"/>
+        </LinearGradientBrush>
+
+        <Geometry x:Key="IconClock">M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z</Geometry>
+        <Geometry x:Key="IconArrowUp">M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z</Geometry>
+        <Geometry x:Key="IconCheck">M9,16.17L4.83,12L3.41,13.41L9,19L21,7L19.59,5.59L9,16.17Z</Geometry>
+        <Geometry x:Key="IconSearch">M15.5,14L14.71,13.21C15.5,12 16,10.5 16,9C16,5.13 12.87,2 9,2C5.13,2 2,5.13 2,9C2,12.87 5.13,16 9,16C10.5,16 12,15.5 13.21,14.71L14,15.5V16L19,21L21,19L16,14M9,14C6.24,14 4,11.76 4,9C4,6.24 6.24,4 9,4C11.76,4 14,6.24 14,9C14,11.76 11.76,14 9,14Z</Geometry>
+        <Geometry x:Key="IconGamepad">
+            M 5,6 C 2.5,6 1,8 1,10.5 L 1,13 C 1,15.5 2.5,17.5 4.5,18 C 5.5,18.2 6.5,17.8 7,17 L 7.5,16 C 8,16 9,16 9.5,16.5 C 10,17 11,17 12,17 C 13,17 14,17 14.5,16.5 C 15,16 16,16 16.5,16 L 17,17 C 17.5,17.8 18.5,18.2 19.5,18 C 21.5,17.5 23,15.5 23,13 L 23,10.5 C 23,8 21.5,6 19,6 L 5,6 Z
+            M 8,5 L 16,5 L 15.5,9 L 8.5,9 Z
+            M 8,12 A 2,2 0 1,0 10,14 L 9,14 A 1,1 0 1,1 8,13 Z
+            M 16,12 A 2,2 0 1,0 18,14 L 17,14 A 1,1 0 1,1 16,13 Z
+            M 5,8 L 6,8 L 6,9 L 7,9 L 7,10 L 6,10 L 6,11 L 5,11 L 5,10 L 4,10 L 4,9 L 5,9 Z
+            M 19,8 A 0.6,0.6 0 1,0 19,9.2 A 0.6,0.6 0 1,0 19,8 Z
+            M 17.5,9.5 A 0.6,0.6 0 1,0 17.5,10.7 A 0.6,0.6 0 1,0 17.5,9.5 Z
+            M 20.5,9.5 A 0.6,0.6 0 1,0 20.5,10.7 A 0.6,0.6 0 1,0 20.5,9.5 Z
+            M 19,11 A 0.6,0.6 0 1,0 19,12.2 A 0.6,0.6 0 1,0 19,11 Z
+            M 4,5 L 7,5 L 7,6 L 3.5,6 Z M 17,5 L 20,5 L 20.5,6 L 17,6 Z
+        </Geometry>
+        <Geometry x:Key="IconChat">M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H6L4,18V4H20</Geometry>
+        <Geometry x:Key="IconApps">M4,4H8V8H4V4M4,10H8V14H4V10M4,16H8V20H4V16M10,4H14V8H10V4M10,10H14V14H10V10M10,16H14V20H10V16M16,4H20V8H16V4M16,10H20V14H16V10M16,16H20V20H16V16Z</Geometry>
+        <Geometry x:Key="IconFood">M11,9H9V2H7V9H5V2H3V9C3,11.12 4.66,12.84 6.75,12.97V22H9.25V12.97C11.34,12.84 13,11.12 13,9V2H11V9M16,6V14H18.5V22H21V2C18.24,2 16,4.24 16,6Z</Geometry>
+        <Geometry x:Key="IconLock">M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z</Geometry>
+        <Geometry x:Key="IconExit">M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z</Geometry>
+        <Geometry x:Key="IconGrid">M3,3H11V11H3V3M13,3H21V11H13V3M3,13H11V21H3V13M13,13H21V21H13V13Z</Geometry>
+
+        <!-- Top text tab -->
+        <Style x:Key="ShellNavTabStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <StackPanel>
+                                <ContentPresenter HorizontalAlignment="Center"/>
+                                <Border x:Name="Underline" Height="2" Margin="0,8,0,0" Background="Transparent" CornerRadius="1"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShellNavTabActiveStyle" TargetType="Button" BasedOn="{StaticResource ShellNavTabStyle}">
+            <Setter Property="Foreground" Value="#FF5ED7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <StackPanel>
+                                <ContentPresenter HorizontalAlignment="Center"/>
+                                <Border Height="2" Margin="0,8,0,0" CornerRadius="1">
+                                    <Border.Background>
+                                        <SolidColorBrush Color="#FF5ED7"/>
+                                    </Border.Background>
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="#FF5ED7" BlurRadius="8" ShadowDepth="0" Opacity="0.8"/>
+                                    </Border.Effect>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Keep icon styles for any leftover uses -->
+        <Style x:Key="ShellIconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <Path x:Name="IconPath"
+                                  Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                  Fill="#B8A8B8"
+                                  Stretch="Uniform"
+                                  Width="22" Height="22"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="IconPath" Property="Fill" Value="#FF5ED7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ShellActiveButtonStyle" TargetType="Button" BasedOn="{StaticResource ShellIconButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Path Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                  Fill="#FF5ED7"
+                                  Stretch="Uniform"
+                                  Width="22" Height="22"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GlassPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#B3342735"/>
+            <Setter Property="BorderBrush" Value="#4FFFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="18"/>
+        </Style>
+
+        <Style x:Key="PrimaryPinkButtonStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" CornerRadius="12" Padding="16,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#FF5ED7" Offset="0"/>
+                                    <GradientStop Color="#C43AA8" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Opacity" Value="0.9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bg" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GameCardStyle" TargetType="Button">
+            <Setter Property="Width" Value="168"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform>
+                                <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1"/>
+                            </Grid.RenderTransform>
+                            <StackPanel>
+                                <Grid Height="168" Width="168">
+                                    <Border x:Name="MaskingBorder" CornerRadius="18">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#3C2F3D" Offset="0"/>
+                                                <GradientStop Color="#241820" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Border.OpacityMask>
+                                            <VisualBrush>
+                                                <VisualBrush.Visual>
+                                                    <Border Background="Black" SnapsToDevicePixels="True"
+                                                            CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
+                                                            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </Border.OpacityMask>
+                                        <Image Source="{Binding ImageUrl, Converter={StaticResource ImageUrlConverter}}" Stretch="UniformToFill"/>
+                                    </Border>
+                                    <Border x:Name="HoverBorder" CornerRadius="18" BorderBrush="Transparent" BorderThickness="1.5" IsHitTestVisible="False"/>
+                                </Grid>
+                                <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" FontSize="13"
+                                           HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="99"/>
+                                <Setter TargetName="HoverBorder" Property="BorderBrush" Value="#FF5ED7"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" To="1.04" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" To="1.04" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Left category item -->
+        <Style x:Key="CategorySideItemStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="12,12"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="10" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource IconGamepad}" Fill="{TemplateBinding Foreground}" Width="16" Height="16" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#22FF5ED7"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CategoryPillStyle" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Background" Value="#342735"/>
+            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" CornerRadius="20" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#252535"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="HexTariffButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="220"/>
+            <Setter Property="Height" Value="280"/>
+            <Setter Property="Margin" Value="16"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Card" CornerRadius="20" BorderThickness="1" BorderBrush="#4FFFFFFF" Background="#B3342735" Padding="20">
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" Foreground="White" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,0">
+                                        <TextBlock Text="{Binding Price}" Foreground="#FF5ED7" FontSize="40" FontWeight="Bold"/>
+                                        <TextBlock Text=" тг" Foreground="#B8A8B8" FontSize="16" VerticalAlignment="Bottom" Margin="0,0,0,8"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Card" Property="BorderBrush" Value="#FF5ED7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GoldTariffCardStyle" TargetType="Button">
+            <Setter Property="Width" Value="210"/>
+            <Setter Property="Height" Value="270"/>
+            <Setter Property="Margin" Value="0,0,20,20"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Panel.ZIndex" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CardBorder" RenderTransformOrigin="0.5,0.5" CornerRadius="18" BorderThickness="1" BorderBrush="#4FFFFFFF" Background="#B3342735" ClipToBounds="True">
+                            <Border.RenderTransform>
+                                <ScaleTransform x:Name="ScaleT" ScaleX="1" ScaleY="1"/>
+                            </Border.RenderTransform>
+                            <Grid>
+                                <StackPanel Margin="18,16,18,16">
+                                    <Border Background="#FF5ED7" Width="72" Height="4" CornerRadius="2" HorizontalAlignment="Center" Margin="0,0,0,14"/>
+                                    <TextBlock Text="{Binding Name}" Foreground="White" FontSize="20" FontWeight="SemiBold" TextAlignment="Center" Margin="0,0,0,14"/>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding Feature1}" Foreground="#C8C8D0" FontSize="13" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding Feature2}" Foreground="#C8C8D0" FontSize="13" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding BurnLabel}" Foreground="#FF5ED7" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,14">
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:N0}}" Foreground="#FF5ED7" FontSize="32" FontWeight="Bold"/>
+                                        <TextBlock Text=" тг" Foreground="#B8A8B8" FontSize="14" VerticalAlignment="Bottom" Margin="0,0,0,6"/>
+                                    </StackPanel>
+                                    <Border Background="{StaticResource AccentGradientBrush}" CornerRadius="10" Padding="0,10" HorizontalAlignment="Stretch">
+                                        <TextBlock Text="Купить" Foreground="White" FontSize="14" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Panel.ZIndex" Value="99"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#FF5ED7"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleT" Storyboard.TargetProperty="ScaleX" To="1.04" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleT" Storyboard.TargetProperty="ScaleY" To="1.04" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleT" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.15"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleT" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,68 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_DB=${DB_NAME:-AetherShell}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: SpikServer/Dockerfile
+    ports:
+      - "${SERVER_PORT:-5232}:5232"
+    environment:
+      - SPIK_DB_CONNECTION=Host=db;Port=5432;Database=${DB_NAME:-AetherShell};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:?DB_PASSWORD is required}
+      - SPIK_JWT_SECRET=${SPIK_JWT_SECRET:?SPIK_JWT_SECRET is required}
+      - SPIK_URLS=http://0.0.0.0:5232
+      - SPIK_CORS_ORIGINS=${SPIK_CORS_ORIGINS:-}
+      - PUBLIC_URL=${PUBLIC_URL:-http://localhost:5232}
+      - AETHER_ADMIN_EMAIL=${AETHER_ADMIN_EMAIL:-}
+      - AETHER_ADMIN_PASSWORD=${AETHER_ADMIN_PASSWORD:-}
+      - SPIK_SMTP_HOST=${SPIK_SMTP_HOST:-}
+      - SPIK_SMTP_PORT=${SPIK_SMTP_PORT:-587}
+      - SPIK_SMTP_USER=${SPIK_SMTP_USER:-}
+      - SPIK_SMTP_PASSWORD=${SPIK_SMTP_PASSWORD:-}
+      # Общий секрет: по нему сервер узнаёт кнопки Telegram-бота.
+      - TG_BOT_SECRET=${TG_BOT_SECRET:-}
+    volumes:
+      # Данные сервера (не перекрывают /app).
+      - server-data:/data
+      # Установщик для кнопки в кабинете → zip клуба
+      - ./deploy/installer:/app/Installer:ro
+      # Шелл и watchdog, которые установщик качает с /api/download/*
+      - ./deploy/client:/app/ClientFiles:ro
+      - ./deploy/watchdog:/app/WatchdogFiles:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Заявки с лендинга → Telegram. Без токена контейнер сразу выйдет — задайте TG_BOT_TOKEN.
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+    environment:
+      - BOT_TOKEN=${TG_BOT_TOKEN:-}
+      - TG_CHAT_ID=${TG_CHAT_ID:-}
+      - SERVER_URL=http://server:5232
+      - AETHER_ADMIN_EMAIL=${AETHER_ADMIN_EMAIL:-}
+      - AETHER_ADMIN_PASSWORD=${AETHER_ADMIN_PASSWORD:-}
+      - TG_BOT_SECRET=${TG_BOT_SECRET:-}
+      - POLL_SECONDS=${POLL_SECONDS:-60}
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  server-data:

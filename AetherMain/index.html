@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether — ПО для ПК-клубов: мониторинг сессий и зала</title>
+    <meta name="description" content="Aether — ПО для ПК-клубов: карта зала, мониторинг сессий, продажи и отчёты смены в одной панели. Подключите клуб быстро.">
+    <meta name="keywords" content="ПО для ПК-клуба, софт для компьютерного клуба, управление ПК клубом, мониторинг сессий, Aether">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Aether — ПО для ПК-клубов: мониторинг сессий и зала">
+    <meta property="og:description" content="Карта зала, живые сессии, продажи и отчёты — панель для вашего ПК-клуба.">
+    <meta property="og:image" content="/aether-logo-256.png">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Aether — ПО для ПК-клубов">
+    <meta name="twitter:description" content="Мониторинг, продажи и управление ПК-клубом в одном ПО.">
+    <link rel="icon" type="image/png" href="/aether-logo-256.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="stylesheet" href="/landing.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "/#organization",
+          "name": "Aether",
+          "url": "/",
+          "logo": "/aether-logo-256.png",
+          "description": "ПО для ПК-клубов: мониторинг, продажи и управление сменой",
+          "sameAs": []
+        },
+        {
+          "@type": "SoftwareApplication",
+          "name": "Aether",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/OnlineOnly"
+          },
+          "description": "Программное обеспечение для компьютерных клубов: карта зала, сессии, касса и отчёты"
+        },
+        {
+          "@type": "LocalBusiness",
+          "@id": "/#localbusiness",
+          "name": "Aether",
+          "image": "/aether-logo-256.png",
+          "url": "/",
+          "description": "Разработка и поддержка ПО для ПК-клубов",
+          "priceRange": "$$",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Russia"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "RU",
+            "addressLocality": "Москва"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "sales",
+            "availableLanguage": ["Russian"],
+            "email": "hello@aether.local"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "name": "Aether",
+          "url": "/",
+          "inLanguage": "ru-RU",
+          "publisher": { "@id": "/#organization" }
+        }
+      ]
+    }
+    </script>
+    <script>
+      window.AETHER_ANALYTICS = { ymId: '', gaId: '' };
+    </script>
+    <script src="/analytics.js" defer></script>
+</head>
+<body>
+
+        <section class="screen-1">
+            <header>
+                <a class="brand" href="/">
+                    <img src="aether-logo-256.png" width="52" height="52" decoding="async" alt="Aether — ПО для ПК-клубов" class="brand-mark">
+                    <div class="logo-text">
+                        <span class="brand-name">Aether</span>
+                        ПО для ПК-клубов · любой дизайн
+                    </div>
+                </a>
+                <div class="profile-widget" id="pWidget">
+                    <svg class="user-icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <div class="widget-content">
+                        <div class="welcome-txt">Привет <b>Новый пользователь !</b></div>
+                        <a href="#" class="btn-reg-header">Регистрация</a>
+                    </div>
+                </div>
+            </header>
+            <div class="ball b1" data-speed="0.02"></div><div class="ball b2" data-speed="0.05"></div>
+            <div class="ball b3" data-speed="0.03"></div><div class="ball b4" data-speed="0.07"></div>
+            <div class="ball b5" data-speed="0.04"></div><div class="ball b6" data-speed="0.06"></div>
+            <div class="ball b7" data-speed="0.03"></div><div class="ball b8" data-speed="0.05"></div>
+            <main class="hero-text">
+                <img src="aether-logo-256.png" width="120" height="120" decoding="async" fetchpriority="high" alt="Aether — логотип ПО для ПК-клубов" class="hero-logo">
+                <h1 id="typewriter-box">
+                    <span class="sr-only">Добро пожаловать в Aether — ПО для ПК-клубов: мониторинг и управление</span>
+                    <span aria-hidden="true"><span id="text-node"></span><span class="cursor" id="cursor-node"></span></span>
+                </h1>
+                <p id="subtext-node">Мониторинг, продажи и лёгкая работа смены — в одном ПО для вашего ПК-клуба</p>
+                <div class="hero-actions" id="hero-actions">
+                    <a href="#" class="hero-btn primary open-auth">Подключить клуб</a>
+                    <a href="/vozmozhnosti" class="hero-btn secondary">Смотреть возможности</a>
+                </div>
+                <div class="hero-chips" id="hero-chips">
+                    <span class="hero-chip">Карта зала</span>
+                    <span class="hero-chip">Живые сессии</span>
+                    <span class="hero-chip">Отчёты смены</span>
+                    <span class="hero-chip">Роли доступа</span>
+                </div>
+            </main>
+            <a href="/vozmozhnosti" class="scroll-hint" aria-label="Листать вниз">вниз<span></span></a>
+            <div class="year">2026</div>
+        </section>
+
+        <section class="screen-2" id="vozmozhnosti" aria-labelledby="features-title">
+            <p class="features-label">Aether</p>
+            <h2 class="main-title-2" id="features-title">Возможности ПО для ПК-клуба</h2>
+            <p class="section-lead">Всё, чем живёт смена клуба — от первого гостя до закрытия кассы — собрано в понятные блоки без лишнего шума.</p>
+            <div class="grid-2">
+                <article class="card"><span class="card-num">01</span><h3>Мониторинг ПК-клуба</h3><p>Видите весь зал как на ладони: кто онлайн, кто играет, сколько минут осталось — без обхода стоек и звонков администраторам.</p></article>
+                <article class="card"><span class="card-num">02</span><h3>Продажи и бар</h3><p>Время, напитки и товары в одном потоке. Меньше очередей у стойки — больше чеков и довольных гостей у мониторов.</p></article>
+                <article class="card"><span class="card-num">03</span><h3>Карта зала</h3><p>Расставьте ПК как в реальном клубе и управляйте сессиями прямо со схемы — быстро, наглядно, без лишних вкладок.</p></article>
+                <article class="card"><span class="card-num">04</span><h3>Автоматизация сессий</h3><p>Сессии стартуют и завершаются сами, таймеры не «съедают» минуты. Админ занимается гостями, а не секундомером.</p></article>
+                <article class="card"><span class="card-num">05</span><h3>Софт для клубов</h3><p>Сделано под ритм ПК-клуба: смены, VIP-зона, пиковые часы и ночные марафоны — без громоздкого «универсального» софта.</p></article>
+                <article class="card"><span class="card-num">06</span><h3>Отчёты смены</h3><p>Выручка, загрузка и любимые места гостей — в понятных цифрах. Понимаете, что работает, ещё до конца смены.</p></article>
+            </div>
+            <div class="waves-bg" aria-hidden="true">
+                <svg class="svg-waves" viewBox="0 24 150 28" preserveAspectRatio="none">
+                    <defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" /></defs>
+                    <g class="parallax-waves">
+                        <use href="#gentle-wave" x="48" y="0" />
+                        <use href="#gentle-wave" x="48" y="5" />
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <section class="screen-3" id="funkcii" aria-labelledby="functions-title">
+            <div class="s3-header">
+                <p class="features-label">Функции Aether</p>
+                <h2 class="main-title-2" id="functions-title">Функции управления ПК-клубом</h2>
+                <p class="section-lead">Пять опорных блоков, на которых держится спокойная смена — листайте слева, детали открываются справа.</p>
+            </div>
+            <div class="s3-container">
+                <div class="s3-side-menu" id="sideMenu">
+                    <div class="menu-item active" onclick="switchTab(0)">Статистика</div>
+                    <div class="menu-item" onclick="switchTab(1)">Интуитивный интерфейс</div>
+                    <div class="menu-item" onclick="switchTab(2)">Система лояльности</div>
+                    <div class="menu-item" onclick="switchTab(3)">Управление кассой</div>
+                    <div class="menu-item" onclick="switchTab(4)">Безопасность данных</div>
+                </div>
+                <div class="s3-main-card">
+                    <div id="tab-content">
+                        <h2 id="tab-title">Статистика</h2>
+                        <div class="tab-accent"></div>
+                        <p id="tab-text">Не сухие таблицы, а живая картина клуба: выручка по часам, средний чек, загрузка залов и какие места разбирают первыми. Открыли кабинет — и уже понятно, куда направить внимание сегодня вечером.</p>
+                        <div class="tab-points" id="tab-points">
+                            <span class="tab-point">Выручка по часам</span>
+                            <span class="tab-point">Загрузка залов</span>
+                            <span class="tab-point">Средний чек</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen-4" id="podklyuchit-klub">
+            <div class="cta-wrapper">
+                <div class="ball b3 cta-ball cta-ball-a" data-speed="0.03"></div>
+                <div class="ball b6 cta-ball cta-ball-b" data-speed="0.05"></div>
+                <img src="aether-logo-256.png" width="72" height="72" decoding="async" alt="Логотип Aether — ПО для ПК-клубов" class="cta-logo" loading="lazy">
+                <h2 class="cta-text"><b>15 минут</b> и вам доступны все функции ПО для ПК-клуба</h2>
+                <p class="cta-sub">Оставьте заявку — подключим клуб и покажем, как выглядит смена в Aether без лишней настройки.</p>
+                <a href="#" class="btn-final-reg">Регистрация</a>
+                <div class="cta-perks">
+                    <span class="cta-perk">Без долгого внедрения</span>
+                    <span class="cta-perk">Панель под смену</span>
+                    <span class="cta-perk">Поддержка на старте</span>
+                </div>
+            </div>
+            <footer class="site-footer">
+                <div class="footer-inner">
+                    <div class="footer-brand">
+                        <img src="aether-logo-256.png" width="56" height="56" decoding="async" alt="Aether — ПО для ПК-клубов" class="footer-logo-img" loading="lazy">
+                        <div>
+                            <div class="footer-logo">Aether</div>
+                            <p class="footer-tagline">Мониторинг, продажи и управление ПК-клубом — в одном ПО</p>
+                        </div>
+                    </div>
+                    <nav class="footer-nav" aria-label="Навигация в подвале">
+                        <a href="/vozmozhnosti">Возможности</a>
+                        <a href="/funkcii">Функции</a>
+                        <a href="/resursy">Ресурсы</a>
+                        <a href="/podklyuchit-klub" class="footer-cta open-auth">Регистрация</a>
+                    </nav>
+                </div>
+                <div class="footer-bottom">
+                    <span>© 2026 Aether</span>
+                    <span>ПО для ПК-клубов · мониторинг и управление</span>
+                </div>
+            </footer>
+        </section>
+
+        <!-- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ -->
+        <div class="auth-overlay" id="authOverlay">
+            <div class="auth-card">
+                <div class="auth-ball ab1"></div>
+                <div class="auth-ball ab2"></div>
+                <div class="auth-ball ab3"></div>
+
+                <button class="auth-close" id="authClose">
+                    <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Подключить клуб</button>
+                </div>
+
+                <!-- Форма входа -->
+                <form class="auth-form active" id="form-login" onsubmit="return false;">
+                    <div class="auth-field">
+                        <input type="text" placeholder="Email или логин" required autocomplete="username">
+                    </div>
+                    <div class="auth-field">
+                        <input type="password" placeholder="Пароль" required autocomplete="current-password">
+                    </div>
+                    <button class="auth-submit" type="submit">Войти</button>
+                    <div class="auth-forgot"><a href="#">Забыли пароль?</a></div>
+                </form>
+
+                <!-- Форма заявки на подключение -->
+                <form class="auth-form" id="form-register" onsubmit="return false;">
+                    <div class="auth-field">
+                        <input type="text" placeholder="Название вашего клуба" required autocomplete="organization">
+                    </div>
+                    <div class="auth-field">
+                        <input type="email" placeholder="Email для связи" required autocomplete="email">
+                    </div>
+                    <button class="auth-submit" type="submit">Отправить заявку</button>
+                    <p class="auth-note">Мы рассмотрим заявку и пришлём доступы на email</p>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // Типер первого экрана
+            const textTarget = document.getElementById('text-node');
+            const cursor = document.getElementById('cursor-node');
+            const subtext = document.getElementById('subtext-node');
+            const fullTitle = "Добро пожаловать в Aether!";
+            let charIndex = 0;
+            const typingSpeed = 35;
+
+            function type() {
+                if (charIndex < fullTitle.length) {
+                    const currentText = fullTitle.substring(0, charIndex + 1);
+                    if (currentText.includes("Aether")) {
+                        textTarget.innerHTML = currentText.replace("Aether", "<span class='pink'>Aether</span>");
+                    } else { textTarget.textContent = currentText; }
+                    charIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    cursor.style.visibility = 'hidden';
+                    subtext.classList.add('visible');
+                    document.getElementById('hero-actions')?.classList.add('visible');
+                    document.getElementById('hero-chips')?.classList.add('visible');
+                }
+            }
+            window.addEventListener('DOMContentLoaded', () => { setTimeout(type, 400); });
+
+            // Виджет профиля и параллакс шаров
+            const widget = document.getElementById('pWidget');
+            widget.onclick = (e) => { if (e.target.tagName !== 'A') widget.classList.toggle('active'); };
+            document.addEventListener('mousemove', (e) => {
+                document.querySelectorAll('.ball').forEach(b => {
+                    const speed = b.getAttribute('data-speed');
+                    const x = (window.innerWidth / 2 - e.clientX) * speed;
+                    const y = (window.innerHeight / 2 - e.clientY) * speed;
+                    b.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+
+            // --- АНИМАЦИЯ ПОЯВЛЕНИЯ ПЛАЖЕК (S3) ПРИ СКРОЛЛЕ ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const items = document.querySelectorAll('.menu-item');
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.classList.add('revealed');
+                            }, index * 100); // Каскадное появление
+                        });
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            observer.observe(document.getElementById('funkcii'));
+
+            // --- ЛОГИКА ТАБОВ С АНИМАЦИЕЙ СЛЕВА НАПРАВО ---
+            const tabData = [
+                { title: "Статистика", text: "Не сухие таблицы, а живая картина клуба: выручка по часам, средний чек, загрузка залов и какие места разбирают первыми. Открыли кабинет — и уже понятно, куда направить внимание сегодня вечером.", points: ["Выручка по часам", "Загрузка залов", "Средний чек"] },
+                { title: "Интуитивный интерфейс", text: "Панель собрана под смену, а не под инструкцию на 40 страниц. Новый администратор разобирается за несколько минут: статусы, сессии и действия — там, где их ждут, без лишних кликов в пиковый час.", points: ["Старт за минуты", "Всё под рукой", "Без лишних экранов"] },
+                { title: "Система лояльности", text: "Постоянные гости возвращаются сами: бонусы, уровни и персональные условия без Excel и записок на стойке. Наградите «своих» — и зал заполняется привычными лицами, а не случайным трафиком.", points: ["Бонусы гостям", "Уровни лояльности", "Постоянный трафик"] },
+                { title: "Управление кассой", text: "Деньги клуба под контролем от старта сессии до закрытия смены. Меньше ручных сверки и «куда делся чек» — больше прозрачности для владельца и спокойствия для администратора.", points: ["Контроль смены", "Прозрачные чеки", "Меньше ручной сверки"] },
+                { title: "Безопасность данных", text: "История сессий, клиенты и финансы — не на чужом флеш-накопителе под стойкой. Доступы по ролям, защищённое соединение и резервные копии: клуб работает, даже если железо подводит.", points: ["Роли доступа", "Защищённое соединение", "Резервные копии"] }
+            ];
+
+            function renderTabPoints(points) {
+                const box = document.getElementById('tab-points');
+                if (!box) return;
+                box.innerHTML = points.map(p => `<span class="tab-point">${p}</span>`).join('');
+            }
+
+            function switchTab(index) {
+                const items = document.querySelectorAll('.menu-item');
+                const title = document.getElementById('tab-title');
+                const text = document.getElementById('tab-text');
+                const points = document.getElementById('tab-points');
+
+                if (items[index].classList.contains('active')) return;
+
+                items.forEach(item => item.classList.remove('active'));
+                items[index].classList.add('active');
+
+                // Анимация ухода (вправо)
+                title.classList.add('slide-out');
+                text.classList.add('slide-out');
+                points?.classList.add('slide-out');
+
+                setTimeout(() => {
+                    // Подготовка к появлению (слева)
+                    title.innerText = tabData[index].title;
+                    text.innerText = tabData[index].text;
+                    renderTabPoints(tabData[index].points);
+
+                    title.classList.remove('slide-out');
+                    text.classList.remove('slide-out');
+                    points?.classList.remove('slide-out');
+
+                    title.classList.add('slide-in');
+                    text.classList.add('slide-in');
+                    points?.classList.add('slide-in');
+
+                    // Принудительный перерасчет стилей
+                    void title.offsetWidth;
+
+                    // Анимация входа
+                    title.classList.remove('slide-in');
+                    text.classList.remove('slide-in');
+                    points?.classList.remove('slide-in');
+                }, 400);
+            }
+
+            // --- МОДАЛЬНОЕ ОКНО АВТОРИЗАЦИИ ---
+            const authOverlay = document.getElementById('authOverlay');
+            const authClose = document.getElementById('authClose');
+            const authTabs = document.querySelectorAll('.auth-tab');
+
+            function openAuth(tab) {
+                authOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                if (tab === 'register') {
+                    authTabs[1].click();
+                }
+            }
+
+            function closeAuth() {
+                authOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            authClose.addEventListener('click', closeAuth);
+            authOverlay.addEventListener('click', (e) => {
+                if (e.target === authOverlay) closeAuth();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeAuth();
+            });
+
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                    document.getElementById('form-' + tab.dataset.tab).classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.btn-reg-header, .btn-final-reg, .footer-cta, .open-auth, .hero-btn.primary').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openAuth('register');
+                });
+            });
+
+            // ── Реальные вызовы API ──────────────────────────────────
+            const API_BASE = '';  // Лендинг отдаётся тем же сервером, что и API
+
+            // Форма входа → личный кабинет
+            document.getElementById('form-login').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputs = e.target.querySelectorAll('input');
+                const email = inputs[0].value.trim();
+                const password = inputs[1].value;
+                const btn = e.target.querySelector('.auth-submit');
+                btn.textContent = 'Вход…';
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch(API_BASE + '/api/account/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Ошибка входа');
+
+                    localStorage.setItem('cabinet_token', data.token);
+                    localStorage.setItem('cabinet_user', JSON.stringify({
+                        accountId: data.accountId,
+                        email: data.email,
+                        displayName: data.displayName,
+                        role: data.role
+                    }));
+                    window.location.href = '/kabinet';
+                } catch (err) {
+                    btn.textContent = 'Войти';
+                    btn.disabled = false;
+                    inputs[1].classList.add('field-error');
+                    inputs[1].placeholder = err.message;
+                    setTimeout(() => {
+                        inputs[1].classList.remove('field-error');
+                        inputs[1].placeholder = 'Пароль';
+                    }, 3000);
+                }
+            });
+
+            // Форма регистрации → отправка заявки на подключение
+            document.getElementById('form-register').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const inputs = e.target.querySelectorAll('input');
+                const club = inputs[0].value.trim();
+                const email = inputs[1].value.trim();
+                const btn = e.target.querySelector('.auth-submit');
+
+                if (!club) { inputs[0].classList.add('field-error'); return; }
+
+                btn.textContent = 'Отправка…';
+                btn.disabled = true;
+
+                try {
+                    const res = await fetch(API_BASE + '/api/leads', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ clubName: club, email })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Ошибка отправки');
+
+                    btn.textContent = '✅ Заявка отправлена!';
+                    btn.classList.add('is-success');
+                    setTimeout(() => closeAuth(), 2000);
+                } catch (err) {
+                    btn.textContent = 'Зарегистрироваться';
+                    btn.disabled = false;
+                    btn.classList.remove('is-success');
+                    alert('Ошибка: ' + err.message);
+                }
+            });
+        </script>
+    
+    <script>
+      (function () {
+        var map = {
+          '/vozmozhnosti': 'vozmozhnosti',
+          '/funkcii': 'funkcii',
+          '/podklyuchit-klub': 'podklyuchit-klub',
+          '/resursy': null
+        };
+        var path = location.pathname.replace(/\/$/, '') || '/';
+        if (map[path]) {
+          var el = document.getElementById(map[path]);
+          if (el) setTimeout(function () { el.scrollIntoView({ behavior: 'smooth' }); }, 120);
+        }
+      })();
+    </script>
+</body>
+</html>
+

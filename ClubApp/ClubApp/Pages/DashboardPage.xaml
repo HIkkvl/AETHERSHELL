@@ -1,0 +1,71 @@
+<Page x:Class="AetherShell.Client.Pages.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      d:DesignHeight="1080" d:DesignWidth="1920"
+      Title="DashboardPage">
+
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly" ClipToBounds="False">
+        <StackPanel Margin="60,40" ClipToBounds="False">
+
+            <TextBlock Text="Популярные Игры"
+                       Foreground="White"
+                       FontSize="40"
+                       FontWeight="Bold"
+                       Margin="20,0,0,0"/>
+
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          PanningMode="HorizontalOnly"
+                          ClipToBounds="False">
+
+                <ItemsControl x:Name="NewGamesList" ClipToBounds="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" ClipToBounds="False"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource GameCardStyle}"
+                                    Click="Game_Click"
+                                    Tag="{Binding}"
+                                    Margin="20,30,20,30"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock Text="Популярные тарифы"
+                       Foreground="White"
+                       FontSize="40"
+                       FontWeight="Bold"
+                       Margin="20,10,0,0"/>
+
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          PanningMode="HorizontalOnly"
+                          ClipToBounds="False">
+
+                <ItemsControl x:Name="PopularTariffsList" ClipToBounds="False">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" ClipToBounds="False"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource GoldTariffCardStyle}"
+                                    Click="Tariff_Click"
+                                    Tag="{Binding Id}"
+                                    Margin="20,30,20,30"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

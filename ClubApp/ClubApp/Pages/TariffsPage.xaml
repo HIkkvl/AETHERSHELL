@@ -1,0 +1,48 @@
+<Page x:Class="AetherShell.Client.Pages.TariffsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      d:DesignHeight="1080" d:DesignWidth="1920"
+      Title="TariffsPage">
+
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Padding="40" ClipToBounds="False">
+        <StackPanel ClipToBounds="False">
+
+            <TextBlock Text="Доступные тарифы"
+                       Foreground="White"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Margin="8,8,0,24"/>
+
+            <ItemsControl x:Name="TariffsList" ClipToBounds="False">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" ClipToBounds="False"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Click="Tariff_Click"
+                                Tag="{Binding Id}"
+                                Margin="30,30,30,50">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource GoldTariffCardStyle}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Panel.ZIndex" Value="1000"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

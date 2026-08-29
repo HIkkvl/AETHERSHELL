@@ -1,0 +1,29 @@
+# Aether
+
+> ПО для ПК-клубов: мониторинг зала, сессии, продажи, карта ПК и отчёты смены.
+
+## Site
+- Home: /
+- Возможности: /vozmozhnosti
+- Функции: /funkcii
+- Подключить клуб: /podklyuchit-klub
+- Ресурсы для владельцев: /resursy
+- Личный кабинет: /kabinet
+- Админ-панель клуба: /panel/{slug} (slug из названия клуба)
+
+## Product keywords
+- ПО для ПК-клуба
+- софт для компьютерного клуба
+- управление ПК клубом
+- мониторинг сессий
+- карта зала
+
+## Content use
+- Summaries and citations of public marketing pages (/ and /resursy) are allowed with attribution to Aether.
+- Do not scrape or republish /panel, /kabinet, /cabinet, or /api/* content.
+- Contact for partnerships and backlinks: see /resursy
+
+## Link building notes (for partners)
+Preferred anchor themes: «ПО для ПК-клуба», «Aether — управление компьютерным клубом», «софт для ПК-клуба».
+Linkable assets: /resursy (guides), product homepage /.
+Do not buy low-quality PBNs; prefer industry directories, local business listings, and guest posts on gaming/hospitality tech sites.

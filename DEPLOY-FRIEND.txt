@@ -1,0 +1,34 @@
+Инструкция для сервера друга
+=============================
+
+Готовый пакет лежит на Рабочем столе:
+  AetherShell-Server
+  AetherShell-Server.zip
+
+1) Установить Docker Desktop и дождаться запуска.
+
+2) Распаковать AetherShell-Server (или использовать папку как есть).
+
+3) В .env заменить PUBLIC_URL на IP сервера:
+   PUBLIC_URL=http://IP_СЕРВЕРА:5232
+
+   Остальное (DB_PASSWORD, JWT, SMTP, админ) уже можно оставить
+   как подготовлено, либо сменить перед отправкой.
+
+4) Убедиться, что есть файлы:
+   deploy\installer\AetherShell.Installer.exe
+   deploy\watchdog\AetherShell.Watchdog.exe
+   deploy\client\AetherShell.Client.exe
+
+5) Выполнить:
+   docker compose up -d --build
+
+6) Открыть файрвол: входящий TCP 5232.
+
+7) Проверить:
+   http://IP:5232/
+   http://IP:5232/kabinet
+   http://IP:5232/panel/…
+
+Telegram-бот стартует вместе с сервером (docker compose).
+Заполните TG_BOT_TOKEN, TG_CHAT_ID, TG_BOT_SECRET в .env.

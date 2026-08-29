@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;600;700;800&display=swap');
+
+:root {
+  font-family: 'Sofia Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  --bg: #F3F1F5;
+  --surface: #FFFFFF;
+  --ink: #1A1520;
+  --muted: #6B6570;
+  --line: #E6E0E8;
+  --accent: #E600E6;
+  --accent-hover: #FF33FF;
+  --accent-soft: #F8E8F8;
+  --green: #1FA971;
+  --green-soft: #E8F7F0;
+  --amber: #D97706;
+  --amber-soft: #FFF7ED;
+  --red: #DC3B4A;
+  --red-soft: #FDECEE;
+  --blue: #3B7CFF;
+  --blue-soft: #EBF1FF;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --shadow: 0 1px 2px rgba(26, 21, 32, 0.04);
+  --shadow-md: 0 8px 24px rgba(26, 21, 32, 0.06);
+
+  --font-title: 28px;
+  --font-section: 15px;
+  --font-body: 14px;
+  --font-meta: 12px;
+
+  /* legacy aliases used in TSX inline styles */
+  --bg-primary: var(--bg);
+  --bg-secondary: var(--surface);
+  --text-primary: var(--ink);
+  --text-secondary: var(--muted);
+  --accent-blue: var(--blue);
+  --accent-green: var(--green);
+  --accent-purple: var(--accent-hover);
+  --accent-pink: var(--accent);
+  --accent-red: var(--red);
+  --border-color: var(--line);
+  --shadow-card: var(--shadow);
+
+  background-color: var(--bg);
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Sofia Sans', sans-serif;
+  font-size: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+#root { height: 100%; }
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D4CED8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }

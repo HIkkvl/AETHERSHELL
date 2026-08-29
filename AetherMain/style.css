@@ -1,0 +1,186 @@
+:root {
+    --main-pink: #ff00ff;
+    --light-pink: #fde6f7;
+    --bg-white: #ffffff;
+    --text-dark: #333;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+/* Фоновые круги */
+.bg-circles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    background: var(--light-pink);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.6;
+}
+
+.c1 {
+    width: 300px;
+    height: 300px;
+    left: -100px;
+    top: 100px;
+}
+
+.c2 {
+    width: 150px;
+    height: 150px;
+    right: 10%;
+    top: 50px;
+}
+
+.c3 {
+    width: 200px;
+    height: 200px;
+    left: 40%;
+    top: 40%;
+}
+
+/* Хедер */
+header {
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--main-pink);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Hero Секция */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    position: relative;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.highlight {
+    color: var(--main-pink);
+}
+
+.floating-cube-container {
+    margin-top: 50px;
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Особенности */
+.features {
+    padding: 100px 10% 50px;
+    background: linear-gradient(to bottom, transparent, var(--light-pink));
+    text-align: center;
+}
+
+.features-grid {
+    display: flex;
+    gap: 40px;
+    margin-top: 50px;
+    text-align: left;
+}
+
+.features-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.feat-btn {
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+    .feat-btn.active, .feat-btn:hover {
+        background: var(--main-pink);
+        color: white;
+    }
+
+.features-content {
+    flex: 2;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+}
+
+/* Кнопка Регистрации */
+.cta-block {
+    margin-top: 80px;
+}
+
+.reg-button {
+    padding: 15px 60px;
+    font-size: 1.2rem;
+    background: white;
+    border: 2px solid var(--main-pink);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 20px rgba(255, 0, 255, 0.2);
+}
+
+    .reg-button:hover {
+        background: var(--main-pink);
+        color: white;
+    }
+
+footer {
+    width: 100%;
+    height: 180px;
+    background-color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-logo-container {
+    width: 120px; /* Увеличил размер, так как лого детальное */
+    height: 120px;
+    color: white; /* Делает SVG белым благодаря currentColor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .footer-logo-container svg {
+        width: 100%;
+        height: 100%;
+    }

@@ -1,0 +1,58 @@
+# ── Секреты и конфиги с данными ──
+*.env
+!*.env.example
+appsettings.*.json
+!appsettings.json
+server-settings.json
+
+# ── Код, слитый в единый сервер: лежит на всякий случай, в репозиторий не нужен ──
+_archive/
+
+# ── Статика, которую сборка копирует в сервер ──
+SpikServer/SpikServer/wwwroot/
+
+# ── Базы данных ──
+*.db
+*.db-wal
+*.db-shm
+
+# ── .NET ──
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+*.pdb
+
+# ── Node.js ──
+node_modules/
+dist/
+
+# ── Python ──
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# ── NuGet (old-style) ──
+packages/
+
+# ── Installer (бинарники собираются CI/CD) ──
+Installer/
+*.exe
+
+# ── IDE ──
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ──
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ── Локальный мусор / восстановление ──
+_recover/
+_bamltool2/
+*.zip

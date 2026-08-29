@@ -1,0 +1,12 @@
+# Зависимости и результаты сборки ставятся внутри контейнера.
+# Если скопировать их с Windows, файлы теряют права на выполнение (tsc: Permission denied).
+admin-panel/node_modules
+admin-panel/dist
+**/bin
+**/obj
+
+# В образ сервера не входят
+ClubApp
+deploy
+.git
+.env

@@ -1,0 +1,41 @@
+.image-field .image-drop {
+    margin-top: 10px;
+    padding: 16px;
+    border: 1.5px dashed #f0c8f0;
+    border-radius: 14px;
+    background: #fdf8fd;
+    color: #b06ab0;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.image-field .image-drop:hover,
+.image-field .image-drop.dragging {
+    border-color: #FF00FF;
+    background: #fdf0fd;
+    color: #b800b8;
+}
+
+.image-field .image-error {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.image-field .image-preview {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.image-field .image-preview img {
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 14px;
+    border: 1px solid #f0e8f0;
+    object-fit: contain;
+}

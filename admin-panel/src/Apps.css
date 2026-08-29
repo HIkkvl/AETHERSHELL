@@ -1,0 +1,375 @@
+.apps-container {
+  /* .page provides padding / animation */
+}
+
+.apps-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+/* ─── ВКЛАДКИ ─── */
+.tabs {
+  display: flex;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.tabs button {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-body);
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tabs button:hover {
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+.tabs button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-add {
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: var(--font-body);
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.btn-add:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* ─── ФИЛЬТРЫ ЖАНРОВ ─── */
+.sub-tabs-container {
+  margin-bottom: 18px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sub-tab {
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.sub-tab:hover {
+  border-color: #D2CAD6;
+  color: var(--ink);
+}
+.sub-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ─── СЕТКА ─── */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.app-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+.app-card:hover { border-color: #D2CAD6; }
+
+.app-image-container {
+  height: 200px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.app-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-image {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
+
+.app-info {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-info h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-info .path {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  border-radius: 8px;
+  margin-top: auto;
+  font-family: monospace;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── КНОПКИ НА КАРТОЧКЕ ─── */
+.app-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.app-card:hover .app-actions { opacity: 1; }
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.btn-icon.edit { background: var(--blue); }
+.btn-icon.edit:hover { background: #2f6ae6; }
+
+.btn-icon.del { background: var(--red); }
+.btn-icon.del:hover { background: #B91C2C; }
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--line);
+  font-weight: 700;
+}
+
+.loading-text {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 40px;
+  font-weight: 700;
+}
+
+/* ─── МОДАЛКА ─── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 21, 32, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: var(--surface);
+  width: 500px;
+  max-width: 100%;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+
+.modal-content h2 {
+  margin: 0 0 18px;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--ink);
+  transition: background 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+.modal-close:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-input,
+.form-group input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: var(--font-body);
+  font-weight: 600;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.form-input:focus,
+.form-group input:focus { border-color: var(--accent); }
+
+.form-group select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: var(--font-body);
+  font-weight: 600;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.form-group select:focus { border-color: var(--accent); }
+
+.img-preview {
+  margin-top: 12px;
+  text-align: center;
+  background: var(--bg);
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--line);
+}
+.img-preview img {
+  max-height: 180px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+.btn-submit {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: var(--font-body);
+  box-shadow: var(--shadow);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.btn-submit:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .apps-header { flex-direction: column; align-items: flex-start; }
+  .apps-header .tabs { flex-wrap: wrap; }
+  .apps-grid { grid-template-columns: 1fr; gap: 12px; }
+  .app-image-container { height: 160px; }
+}

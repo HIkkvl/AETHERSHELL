@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /kabinet
+Disallow: /cabinet
+Disallow: /api/
+Disallow: /clubhub
+
+Sitemap: /sitemap.xml

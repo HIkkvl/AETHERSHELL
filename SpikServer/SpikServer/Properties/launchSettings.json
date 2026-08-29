@@ -1,0 +1,44 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Development": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://0.0.0.0:5232",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SPIK_JWT_SECRET": "dev-only-change-me-f0w6C2UAGyzl3YOs8kcmnVTOM62xoQXNOJCeMFnE",
+        "SPIK_DB_CONNECTION": "Host=localhost;Port=5432;Database=AetherShell;Username=postgres;Password=bf8f4k42h3gg4ffz",
+        "AETHER_ADMIN_EMAIL": "admin@localhost",
+        "AETHER_ADMIN_PASSWORD": "admin12345",
+        "PUBLIC_URL": "http://localhost:5232"
+      }
+    },
+    "Development (сброс старой базы)": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://0.0.0.0:5232",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SPIK_JWT_SECRET": "dev-only-change-me-f0w6C2UAGyzl3YOs8kcmnVTOM62xoQXNOJCeMFnE",
+        "SPIK_DB_CONNECTION": "Host=localhost;Port=5432;Database=AetherShell;Username=postgres;Password=bf8f4k42h3gg4ffz",
+        "AETHER_ADMIN_EMAIL": "admin@localhost",
+        "AETHER_ADMIN_PASSWORD": "admin12345",
+        "PUBLIC_URL": "http://localhost:5232",
+        "SPIK_RESET_LEGACY_DB": "true"
+      }
+    },
+    "Production": {
+      "commandName": "Project",
+      "dotnetRunMessages": false,
+      "applicationUrl": "https://0.0.0.0:443;http://0.0.0.0:5232",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}

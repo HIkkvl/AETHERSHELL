@@ -1,0 +1,344 @@
+/* Shared panel UI — operational Aether look */
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page {
+  padding: 24px 32px 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+  animation: pageFadeIn 0.35s ease;
+}
+
+.page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.page-subtitle {
+  color: var(--muted);
+  font-size: var(--font-meta);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Cards */
+.ui-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+}
+
+.ui-stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.ui-stat:hover {
+  border-color: #D2CAD6;
+}
+
+.ui-stat-label {
+  font-size: var(--font-meta);
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ui-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+/* Buttons */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.ui-btn:hover {
+  border-color: #D2CAD6;
+  background: #FAF8FB;
+}
+
+.ui-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ui-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.ui-btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+
+.ui-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.ui-btn-ghost:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.ui-btn-danger {
+  background: var(--red-soft);
+  border-color: transparent;
+  color: var(--red);
+}
+
+.ui-btn-danger:hover {
+  background: #FAD4D8;
+  color: #B91C2C;
+}
+
+.ui-btn-sm {
+  padding: 7px 12px;
+  font-size: var(--font-meta);
+  border-radius: var(--radius-sm);
+}
+
+/* Tabs */
+.ui-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.ui-tab {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ui-tab:hover {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.ui-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Table */
+.ui-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ui-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #FAF8FB;
+}
+
+.ui-table td {
+  padding: 14px 16px;
+  font-size: var(--font-body);
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.ui-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ui-table tbody tr:hover td {
+  background: #FBF9FC;
+}
+
+/* Badges */
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: #F0ECF2;
+  color: var(--muted);
+}
+
+.ui-badge.ok,
+.ui-badge.green {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.ui-badge.warn,
+.ui-badge.amber {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+.ui-badge.danger,
+.ui-badge.red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.ui-badge.info,
+.ui-badge.blue {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.ui-badge.accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* Fields / modal */
+.ui-field {
+  margin-bottom: 14px;
+}
+
+.ui-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.ui-field input,
+.ui-field select,
+.ui-field textarea,
+.ui-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--font-body);
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.ui-field input:focus,
+.ui-field select:focus,
+.ui-field textarea:focus,
+.ui-input:focus {
+  border-color: var(--accent);
+}
+
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 21, 32, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.ui-modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ui-modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
+.ui-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px 16px 32px;
+  }
+
+  .ui-stat-value {
+    font-size: 24px;
+  }
+}
