@@ -1,0 +1,60 @@
+<Page x:Class="AetherShell.Client.Pages.ProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="ProfilePage"
+      Background="Transparent">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel MaxWidth="520" HorizontalAlignment="Left">
+            <TextBlock Text="Профиль" Foreground="White" FontSize="28" FontWeight="Bold" Margin="0,0,0,24"/>
+
+            <Border Background="#B314141F" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="16" Padding="24" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Аватар" Foreground="#8A8A9A" FontSize="12" Margin="0,0,0,12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="88" Height="88" CornerRadius="12" Background="#2A1530" ClipToBounds="True" Margin="0,0,16,0">
+                            <Grid>
+                                <TextBlock x:Name="AvatarLetter" Text="?" Foreground="White" FontSize="32" FontWeight="Bold"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Image x:Name="AvatarPreview" Stretch="UniformToFill"/>
+                            </Grid>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <Button Content="Выбрать фото" Style="{StaticResource PrimaryPinkButtonStyle}"
+                                    Width="160" Height="40" Click="BtnPickAvatar_Click"/>
+                            <TextBlock Text="JPG / PNG, до 3 МБ" Foreground="#666" FontSize="11" Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#B314141F" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="16" Padding="24" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="Аккаунт" Foreground="#8A8A9A" FontSize="12" Margin="0,0,0,12"/>
+                    <TextBlock Text="Логин" Foreground="#8A8A9A" FontSize="11"/>
+                    <TextBlock x:Name="TxtUsername" Text="—" Foreground="White" FontSize="18" FontWeight="SemiBold" Margin="0,4,0,16"/>
+                    <TextBlock Text="Email" Foreground="#8A8A9A" FontSize="11"/>
+                    <TextBlock x:Name="TxtEmail" Text="—" Foreground="#C8C8D0" FontSize="15" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <Border Background="#B314141F" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="16" Padding="24">
+                <StackPanel>
+                    <TextBlock Text="Смена пароля" Foreground="#8A8A9A" FontSize="12" Margin="0,0,0,12"/>
+                    <TextBlock Text="Текущий пароль" Foreground="#8A8A9A" FontSize="11" Margin="0,0,0,6"/>
+                    <PasswordBox x:Name="BoxCurrentPassword" Height="42" Padding="12,0" FontSize="14"
+                                 Background="#0B0E14" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1"/>
+                    <TextBlock Text="Новый пароль" Foreground="#8A8A9A" FontSize="11" Margin="0,12,0,6"/>
+                    <PasswordBox x:Name="BoxNewPassword" Height="42" Padding="12,0" FontSize="14"
+                                 Background="#0B0E14" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1"/>
+                    <TextBlock Text="Повтор нового пароля" Foreground="#8A8A9A" FontSize="11" Margin="0,12,0,6"/>
+                    <PasswordBox x:Name="BoxNewPassword2" Height="42" Padding="12,0" FontSize="14"
+                                 Background="#0B0E14" Foreground="White" BorderBrush="#33FFFFFF" BorderThickness="1"/>
+                    <TextBlock x:Name="PasswordMsg" FontSize="13" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                    <Button Content="Сохранить пароль" Style="{StaticResource PrimaryPinkButtonStyle}"
+                            Margin="0,16,0,0" Click="BtnChangePassword_Click"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

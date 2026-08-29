@@ -265,6 +265,46 @@ public class ApiService : IDisposable
 		}
 	}
 
+	public async Task<List<ClubMapPcItem>> GetComputersMapAsync(string currentPc)
+	{
+		string url = "/api/Auth/computers-map";
+		if (!string.IsNullOrEmpty(currentPc))
+			url += "?currentPc=" + Uri.EscapeDataString(currentPc);
+		HttpResponseMessage response = await _httpClient.GetAsync(url);
+		string body = await response.Content.ReadAsStringAsync();
+		if (!response.IsSuccessStatusCode)
+			throw new Exception(string.IsNullOrWhiteSpace(body) ? ("HTTP " + (int)response.StatusCode) : body);
+		var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ClubMapPcItem>>(body);
+		return list ?? new List<ClubMapPcItem>();
+	}
+
+	public async Task<(string TargetDisplayName, DateTime EndTime)> TransferSessionAsync(string fromPc, string toPc)
+	{
+		HttpResponseMessage response = await _httpClient.PostAsJsonAsync("/api/Auth/transfer", new
+		{
+			FromPcName = fromPc,
+			ToPcName = toPc
+		});
+		string body = await response.Content.ReadAsStringAsync();
+		if (!response.IsSuccessStatusCode)
+			throw new Exception(string.IsNullOrWhiteSpace(body) ? ("HTTP " + (int)response.StatusCode) : body);
+
+		string display = toPc;
+		DateTime end = DateTime.UtcNow;
+		try
+		{
+			using (var doc = System.Text.Json.JsonDocument.Parse(body))
+			{
+				if (doc.RootElement.TryGetProperty("targetDisplayName", out var d))
+					display = d.GetString() ?? toPc;
+				if (doc.RootElement.TryGetProperty("endTime", out var e))
+					end = e.GetDateTime();
+			}
+		}
+		catch { }
+
+		return (display, end);
+	}
 
 	public void Dispose()
 	{

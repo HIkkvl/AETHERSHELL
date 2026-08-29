@@ -185,6 +185,10 @@ public partial class MainWindow : Window
 
 	public bool IsAdminDesktopUnlocked { get; private set; }
 
+	public bool IsHighAccessMode { get; private set; }
+
+	public event Action HighAccessChanged;
+
 	public MainWindow()
 	{
 		InitializeComponent();
@@ -241,23 +245,137 @@ public partial class MainWindow : Window
 
 	private void ShowExitPasswordAndCloseIfOk()
 	{
+		TryEnterHighAccess();
+	}
+
+	private void TryEnterHighAccess()
+	{
+		if (IsHighAccessMode)
+			return;
+
 		ExitPasswordWindow exitPasswordWindow = new ExitPasswordWindow();
-		if (exitPasswordWindow.ShowDialog() == true)
+		if (exitPasswordWindow.ShowDialog() != true)
+			return;
+
+		if ((exitPasswordWindow.EnteredPassword ?? "") != AppConstants.EXIT_SHELL_PASSWORD)
 		{
-			if ((exitPasswordWindow.EnteredPassword ?? "") == AppConstants.EXIT_SHELL_PASSWORD)
+			new AetherShell.Client.Windows.MessageBox("Неверный пароль.", "Ошибка").ShowDialog();
+			return;
+		}
+
+		// На экране входа — выход из шелла; после авторизации — высокий доступ.
+		if (string.IsNullOrEmpty(_authToken))
+		{
+			CloseShellAfterExitPassword();
+			return;
+		}
+
+		EnterHighAccessMode();
+	}
+
+	private void CloseShellAfterExitPassword()
+	{
+		try { ShellTaskbarWindow.HideForSession(); } catch { }
+		try { KeyboardBlocker.Unblock(); } catch { }
+		try { SystemUtils.RemoveRestrictions(); } catch { }
+		try { TaskbarBlocker.Show(); } catch { }
+		IsHighAccessMode = false;
+		_canClose = true;
+		Application.Current.Shutdown();
+	}
+
+	public void EnterHighAccessMode()
+	{
+		if (IsHighAccessMode) return;
+		IsHighAccessMode = true;
+		ThemeManager.ApplyHighAccessTheme();
+		ApplyHighAccessChrome(true);
+		ShellTaskbarWindow.ApplyHighAccessLook(true);
+		if (HighAccessBadge != null)
+			HighAccessBadge.Visibility = Visibility.Visible;
+		HighAccessChanged?.Invoke();
+	}
+
+	public void LeaveHighAccessMode(bool forceReauth)
+	{
+		if (!IsHighAccessMode) return;
+		IsHighAccessMode = false;
+		ThemeManager.ApplyNormalTheme();
+		ApplyHighAccessChrome(false);
+		ShellTaskbarWindow.ApplyHighAccessLook(false);
+		if (HighAccessBadge != null)
+			HighAccessBadge.Visibility = Visibility.Collapsed;
+		HighAccessChanged?.Invoke();
+
+		// После высокого доступа всегда требуем повторный вход
+		if (forceReauth)
+			EndSession();
+	}
+
+	private void ApplyHighAccessChrome(bool enabled)
+	{
+		try
+		{
+			if (RootShellGrid != null)
 			{
-				ShellTaskbarWindow.HideForSession();
-				KeyboardBlocker.Unblock();
-				SystemUtils.RemoveRestrictions();
-				TaskbarBlocker.Show();
-				_canClose = true;
-				Application.Current.Shutdown();
+				if (enabled)
+				{
+					RootShellGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1A1A1C"));
+				}
+				else
+				{
+					// Restore Figma session gradient (do not leave a flat AppBackgroundBrush)
+					RootShellGrid.Background = new LinearGradientBrush
+					{
+						StartPoint = new Point(0.15, 0),
+						EndPoint = new Point(0.85, 1),
+						GradientStops =
+						{
+							new GradientStop((Color)ColorConverter.ConvertFromString("#040208"), 0),
+							new GradientStop((Color)ColorConverter.ConvertFromString("#0D0518"), 0.5),
+							new GradientStop((Color)ColorConverter.ConvertFromString("#1E0933"), 1)
+						}
+					};
+				}
 			}
-			else
+			if (ShellTopBar != null)
 			{
-				new AetherShell.Client.Windows.MessageBox("Неверный пароль.", "Ошибка").ShowDialog();
+				ShellTopBar.Background = enabled
+					? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CC2A2A2E"))
+					: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0AFFFFFF"));
+			}
+			if (TopPcZoneDot != null)
+			{
+				var online = (Color)ColorConverter.ConvertFromString("#3DDC97");
+				var muted = (Color)ColorConverter.ConvertFromString("#8A8A8E");
+				var c = enabled ? muted : online;
+				TopPcZoneDot.Fill = new SolidColorBrush(c);
+				if (TopPcZoneDot.Effect is DropShadowEffect glow)
+					glow.Color = c;
 			}
 		}
+		catch { }
+	}
+
+	private void BtnLeaveHighAccess_Click(object sender, RoutedEventArgs e)
+	{
+		LeaveHighAccessMode(forceReauth: true);
+	}
+
+	private void BtnCloseShellHighAccess_Click(object sender, RoutedEventArgs e)
+	{
+		// Перед закрытием шелла — всегда реавторизация (сброс сессии)
+		EndSession();
+		CloseShellAfterExitPassword();
+	}
+
+	public void ExitShell()
+	{
+		KeyboardBlocker.Unblock();
+		SystemUtils.RemoveRestrictions();
+		TaskbarBlocker.Show();
+		_canClose = true;
+		Application.Current.Shutdown();
 	}
 
 	private async void ShowAdminPanel()
@@ -338,15 +456,6 @@ public partial class MainWindow : Window
 			WindowUtils.SetWindowGhostMode(this, enableGhost: false);
 			Activate();
 		}
-	}
-
-	public void ExitShell()
-	{
-		KeyboardBlocker.Unblock();
-		SystemUtils.RemoveRestrictions();
-		TaskbarBlocker.Show();
-		_canClose = true;
-		Application.Current.Shutdown();
 	}
 
 	private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -672,39 +781,9 @@ public partial class MainWindow : Window
 		}
 	}
 
-	private void SetAuthMessage(string text, bool sticky = false)
-	{
-		if (AuthErrorText != null)
-		{
-			AuthErrorText.Text = text ?? "";
-		}
-		EnsureAuthMessageTimer();
-		_authMessageClearTimer.Stop();
-		if (!sticky && !string.IsNullOrEmpty(text))
-		{
-			_authMessageClearTarget = AuthErrorText;
-			_authMessageClearTimer.Start();
-		}
-	}
 
-	private void SetRecMessage(string text, Brush foreground = null, bool sticky = false)
-	{
-		if (RecErrorText != null)
-		{
-			RecErrorText.Text = text ?? "";
-			if (foreground != null)
-			{
-				RecErrorText.Foreground = foreground;
-			}
-		}
-		EnsureAuthMessageTimer();
-		_authMessageClearTimer.Stop();
-		if (!sticky && !string.IsNullOrEmpty(text))
-		{
-			_authMessageClearTarget = RecErrorText;
-			_authMessageClearTimer.Start();
-		}
-	}
+
+
 
 	private void EnsureAuthMessageTimer()
 	{
@@ -727,30 +806,133 @@ public partial class MainWindow : Window
 		};
 	}
 
+
+
+	/// <summary>Показать сообщение на экране входа; через несколько секунд само скрывается.</summary>
+	private void SetAuthMessage(string text, bool sticky = false)
+	{
+		if (AuthErrorText != null)
+			AuthErrorText.Text = text ?? "";
+
+		_authMessageClearTimer?.Stop();
+		if (sticky || string.IsNullOrEmpty(text))
+			return;
+
+		if (_authMessageClearTimer == null)
+		{
+			_authMessageClearTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+			_authMessageClearTimer.Tick += (_, __) =>
+			{
+				_authMessageClearTimer.Stop();
+				if (AuthErrorText != null)
+					AuthErrorText.Text = "";
+				if (RecErrorText != null
+					&& RecErrorText.Text != "Отправка..."
+					&& RecErrorText.Foreground != Brushes.Green)
+				{
+					// RecError очищаем отдельным таймером ниже
+				}
+			};
+		}
+		_authMessageClearTimer.Start();
+	}
+
+	private void SetRecMessage(string text, Brush foreground = null, bool sticky = false)
+	{
+		if (RecErrorText != null)
+		{
+			RecErrorText.Text = text ?? "";
+			if (foreground != null)
+				RecErrorText.Foreground = foreground;
+		}
+
+		_authMessageClearTimer?.Stop();
+		if (sticky || string.IsNullOrEmpty(text))
+			return;
+
+		if (_authMessageClearTimer == null)
+		{
+			_authMessageClearTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+			_authMessageClearTimer.Tick += (_, __) =>
+			{
+				_authMessageClearTimer.Stop();
+				if (AuthErrorText != null)
+					AuthErrorText.Text = "";
+				if (RecErrorText != null)
+					RecErrorText.Text = "";
+			};
+		}
+		else
+		{
+			// Переиспользуем тот же таймер: очищаем оба поля
+			_authMessageClearTimer.Tick -= AuthMessageClearTick;
+			_authMessageClearTimer.Tick -= RecMessageClearTick;
+			_authMessageClearTimer.Tick += RecMessageClearTick;
+		}
+		_authMessageClearTimer.Interval = TimeSpan.FromSeconds(5);
+		_authMessageClearTimer.Start();
+	}
+
+	private void AuthMessageClearTick(object sender, EventArgs e)
+	{
+		_authMessageClearTimer.Stop();
+		if (AuthErrorText != null)
+			AuthErrorText.Text = "";
+	}
+
+	private void RecMessageClearTick(object sender, EventArgs e)
+	{
+		_authMessageClearTimer.Stop();
+		if (AuthErrorText != null)
+			AuthErrorText.Text = "";
+		if (RecErrorText != null)
+			RecErrorText.Text = "";
+	}
+
 	private void ClearAuthMessages()
 	{
 		_authMessageClearTimer?.Stop();
-		_authMessageClearTarget = null;
 		if (AuthErrorText != null)
-		{
 			AuthErrorText.Text = "";
-		}
 		if (RecErrorText != null)
-		{
 			RecErrorText.Text = "";
+	}
+
+	private void BtnToggleLoginPassword_Click(object sender, RoutedEventArgs e)
+	{
+		if (LoginPassword == null || LoginPasswordVisible == null) return;
+		if (LoginPassword.Visibility == Visibility.Visible)
+		{
+			LoginPasswordVisible.Text = LoginPassword.Password;
+			LoginPassword.Visibility = Visibility.Collapsed;
+			LoginPasswordVisible.Visibility = Visibility.Visible;
 		}
+		else
+		{
+			LoginPassword.Password = LoginPasswordVisible.Text ?? "";
+			LoginPasswordVisible.Visibility = Visibility.Collapsed;
+			LoginPassword.Visibility = Visibility.Visible;
+		}
+	}
+
+	private string GetLoginPassword()
+	{
+		if (LoginPasswordVisible != null && LoginPasswordVisible.Visibility == Visibility.Visible)
+			return LoginPasswordVisible.Text ?? "";
+		return LoginPassword?.Password ?? "";
 	}
 
 	private async void BtnLogin_Click(object sender, RoutedEventArgs e)
 	{
-		if (string.IsNullOrWhiteSpace(LoginUsername.Text) || string.IsNullOrWhiteSpace(LoginPassword.Password))
+		string password = GetLoginPassword();
+		if (string.IsNullOrWhiteSpace(LoginUsername.Text) || string.IsNullOrWhiteSpace(password))
 		{
 			return;
 		}
 		SetAuthMessage("Вход...", sticky: true);
 		try
 		{
-			LoginResponse result = await ApiService.LoginAsync(LoginUsername.Text, LoginPassword.Password, MyPcId);
+			LoginResponse result = await ApiService.LoginAsync(LoginUsername.Text, password, MyPcId);
 			if (result == null || string.IsNullOrWhiteSpace(result.token))
 			{
 				SetAuthMessage("Неверный логин или пароль.");
@@ -936,6 +1118,9 @@ public partial class MainWindow : Window
 		ShellTaskbarWindow.ShowForSession(this);
 	}
 
+	/// <summary>Освобождает низ экрана под кастомную панель задач.</summary>
+
+
 	public void ApplyTaskbarInset(bool enabled)
 	{
 		if (RootShellGrid != null)
@@ -951,6 +1136,7 @@ public partial class MainWindow : Window
 		_sessionEndTime = DateTime.MinValue;
 		ProcessKiller.KillGames();
 		SystemUtils.ApplyRestrictions();
+		TaskbarBlocker.StartKeepHidden();
 		TaskbarBlocker.StartKeepHidden();
 		ChatMessagesItems.Clear();
 		ActiveOrders.Clear();
@@ -1087,6 +1273,180 @@ public partial class MainWindow : Window
 			SidebarTariffHint.Text = "Тариф: —";
 		}
 		EndSession();
+	}
+
+	private List<ClubMapPcItem> _clubMapPcs = new List<ClubMapPcItem>();
+
+	private async void BtnOpenClubMap_Click(object sender, RoutedEventArgs e)
+	{
+		if (!_isSessionActive || string.IsNullOrEmpty(_authToken))
+		{
+			new AetherShell.Client.Windows.MessageBox("Сначала войдите и начните сессию.", "Карта клуба").ShowDialog();
+			return;
+		}
+		if (ClubMapOverlay != null)
+			ClubMapOverlay.Visibility = Visibility.Visible;
+		await ReloadClubMapAsync();
+	}
+
+	private void BtnCloseClubMap_Click(object sender, RoutedEventArgs e)
+	{
+		if (ClubMapOverlay != null)
+			ClubMapOverlay.Visibility = Visibility.Collapsed;
+	}
+
+	private async void BtnRefreshClubMap_Click(object sender, RoutedEventArgs e)
+	{
+		await ReloadClubMapAsync();
+	}
+
+	private void ClubMapCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		RenderClubMap();
+	}
+
+	private async Task ReloadClubMapAsync()
+	{
+		try
+		{
+			if (ClubMapHint != null)
+				ClubMapHint.Text = "Загрузка…";
+			_clubMapPcs = await ApiService.GetComputersMapAsync(MyPcId) ?? new List<ClubMapPcItem>();
+			RenderClubMap();
+			if (ClubMapHint != null)
+				ClubMapHint.Text = "Нажмите на свободный ПК, чтобы перенести сессию";
+		}
+		catch (Exception ex)
+		{
+			if (ClubMapHint != null)
+				ClubMapHint.Text = "Не удалось загрузить карту: " + ex.Message;
+		}
+	}
+
+	private void RenderClubMap()
+	{
+		if (ClubMapCanvas == null) return;
+		ClubMapCanvas.Children.Clear();
+		double w = ClubMapCanvas.ActualWidth;
+		double h = ClubMapCanvas.ActualHeight;
+		if (w < 10 || h < 10 || _clubMapPcs == null || _clubMapPcs.Count == 0) return;
+
+		var positions = BuildMapPositions(_clubMapPcs);
+		const double tile = 78;
+
+		foreach (var pc in _clubMapPcs)
+		{
+			if (!positions.TryGetValue(pc.id, out var pos)) continue;
+			double left = pos.Item1 / 100.0 * w - tile / 2;
+			double top = pos.Item2 / 100.0 * h - tile / 2;
+			left = Math.Max(4, Math.Min(w - tile - 4, left));
+			top = Math.Max(4, Math.Min(h - tile - 4, top));
+
+			Brush fill;
+			if (pc.isCurrent)
+				fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4FC3F7"));
+			else if (string.Equals(pc.availability, "Free", StringComparison.OrdinalIgnoreCase))
+				fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3DDC97"));
+			else if (string.Equals(pc.availability, "Busy", StringComparison.OrdinalIgnoreCase))
+				fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5ED7"));
+			else
+				fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#555555"));
+
+			var border = new Border
+			{
+				Width = tile,
+				Height = tile,
+				CornerRadius = new CornerRadius(12),
+				Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2A1F2B")),
+				BorderBrush = fill,
+				BorderThickness = new Thickness(2),
+				Cursor = (pc.isCurrent || !string.Equals(pc.availability, "Free", StringComparison.OrdinalIgnoreCase))
+					? Cursors.Arrow
+					: Cursors.Hand,
+				Tag = pc,
+				ToolTip = (pc.displayName ?? pc.name) + " — " + pc.StatusLabel
+			};
+			Canvas.SetLeft(border, left);
+			Canvas.SetTop(border, top);
+
+			var stack = new StackPanel { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(6) };
+			stack.Children.Add(new TextBlock
+			{
+				Text = pc.displayName ?? pc.name,
+				Foreground = Brushes.White,
+				FontWeight = FontWeights.SemiBold,
+				FontSize = 12,
+				TextAlignment = TextAlignment.Center,
+				TextWrapping = TextWrapping.Wrap
+			});
+			stack.Children.Add(new TextBlock
+			{
+				Text = pc.StatusLabel,
+				Foreground = fill,
+				FontSize = 11,
+				TextAlignment = TextAlignment.Center,
+				Margin = new Thickness(0, 4, 0, 0)
+			});
+			border.Child = stack;
+
+			if (!pc.isCurrent && string.Equals(pc.availability, "Free", StringComparison.OrdinalIgnoreCase))
+				border.MouseLeftButtonUp += ClubMapPc_Click;
+
+			ClubMapCanvas.Children.Add(border);
+		}
+	}
+
+	private static Dictionary<int, Tuple<double, double>> BuildMapPositions(List<ClubMapPcItem> pcs)
+	{
+		var result = new Dictionary<int, Tuple<double, double>>();
+		var needAuto = new List<ClubMapPcItem>();
+		foreach (var pc in pcs)
+		{
+			if (pc.mapX.HasValue && pc.mapY.HasValue)
+				result[pc.id] = Tuple.Create(pc.mapX.Value, pc.mapY.Value);
+			else
+				needAuto.Add(pc);
+		}
+
+		int cols = Math.Max(4, (int)Math.Ceiling(Math.Sqrt(Math.Max(needAuto.Count, 1))));
+		for (int i = 0; i < needAuto.Count; i++)
+		{
+			int col = i % cols;
+			int row = i / cols;
+			double x = 12 + col * (76.0 / Math.Max(cols - 1, 1));
+			double y = 18 + row * 16;
+			result[needAuto[i].id] = Tuple.Create(x, y);
+		}
+		return result;
+	}
+
+	private async void ClubMapPc_Click(object sender, MouseButtonEventArgs e)
+	{
+		if (!(sender is FrameworkElement fe) || !(fe.Tag is ClubMapPcItem pc)) return;
+		if (!_isSessionActive || string.IsNullOrEmpty(MyPcId)) return;
+
+		string label = pc.displayName ?? pc.name;
+		if (!WindowUtils.Msg.Ask(
+			"Перенести сессию на «" + label + "»?\nТекущий ПК освободится.",
+			"Пересадка"))
+			return;
+
+		try
+		{
+			if (ClubMapHint != null) ClubMapHint.Text = "Перенос…";
+			var result = await ApiService.TransferSessionAsync(MyPcId, pc.name);
+			if (ClubMapOverlay != null)
+				ClubMapOverlay.Visibility = Visibility.Collapsed;
+			new AetherShell.Client.Windows.MessageBox(
+				"Сессия перенесена на «" + result.TargetDisplayName + "».\nПерейдите к этому компьютеру.",
+				"Готово").ShowDialog();
+			EndSession();
+		}
+		catch (Exception ex)
+		{
+			new AetherShell.Client.Windows.MessageBox(ex.Message, "Пересадка").ShowDialog();
+			await ReloadClubMapAsync();
+		}
 	}
 
 	private async Task SyncSessionStatus()
@@ -1275,12 +1635,14 @@ public partial class MainWindow : Window
 	private void Nav_Games_Click(object sender, RoutedEventArgs e)
 	{
 		HighlightMenuButton(BtnNavGames);
+		SetCategoryRailVisible(true, "Game");
 		MainFrame.Navigate(new GamesPage("Game"));
 	}
 
 	private void Nav_Apps_Click(object sender, RoutedEventArgs e)
 	{
 		HighlightMenuButton(BtnNavApps);
+		SetCategoryRailVisible(true, "Application");
 		MainFrame.Navigate(new GamesPage("Application"));
 	}
 
@@ -1289,6 +1651,7 @@ public partial class MainWindow : Window
 		if (_enableShop)
 		{
 			HighlightMenuButton(BtnNavFood);
+			SetCategoryRailVisible(false);
 			MainFrame.Navigate(new FoodPage());
 		}
 	}
@@ -1296,19 +1659,32 @@ public partial class MainWindow : Window
 	private void Nav_Tariffs_Click(object sender, RoutedEventArgs e)
 	{
 		HighlightMenuButton(BtnNavTariffs);
+		SetCategoryRailVisible(false);
 		MainFrame.Navigate(new TariffsPage());
 	}
 
 	public void NavigateToGames(string category = "Game")
 	{
 		HighlightMenuButton((category == "Game") ? BtnNavGames : BtnNavApps);
+		SetCategoryRailVisible(true, category);
 		MainFrame.Navigate(new GamesPage(category));
 	}
 
 	public void NavigateToTariffs()
 	{
 		HighlightMenuButton(BtnNavTariffs);
+		SetCategoryRailVisible(false);
 		MainFrame.Navigate(new TariffsPage());
+	}
+
+	public void SetCategoryRailVisible(bool visible, string mainCategory = null)
+	{
+		if (ShellCategoryRail != null)
+			ShellCategoryRail.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+		if (CategoryCol != null)
+			CategoryCol.Width = visible ? new GridLength(240) : new GridLength(0);
+		if (ShellCategorySectionTitle != null && mainCategory != null)
+			ShellCategorySectionTitle.Text = mainCategory == "Game" ? "ИГРЫ" : "ПРИЛОЖЕНИЯ";
 	}
 
 	private void UpdateUserChrome(string username)

@@ -514,6 +514,116 @@ namespace AetherShell.Server.Controllers
             return Ok(new { message = "Сессия завершена", savedMinutes = remainingMinutes });
         }
 
+        /// <summary>Карта клуба для шелла: свободные / занятые / оффлайн ПК.</summary>
+        [Authorize]
+        [HttpGet("computers-map")]
+        public async Task<IActionResult> GetComputersMap([FromQuery] string? currentPc)
+        {
+            var pcs = await _context.Computers
+                .AsNoTracking()
+                .Where(c => c.IsApproved)
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+
+            var result = pcs.Select(pc =>
+            {
+                string availability;
+                if (pc.Status == ComputerStatus.Error || !pc.IsOnline)
+                    availability = "Offline";
+                else if (!string.IsNullOrEmpty(pc.CurrentUser) || pc.Status == ComputerStatus.Active)
+                    availability = "Busy";
+                else
+                    availability = "Free";
+
+                return new
+                {
+                    id = pc.Id,
+                    name = pc.Name,
+                    displayName = string.IsNullOrEmpty(pc.DisplayName) ? pc.Name : pc.DisplayName,
+                    groupName = pc.GroupName ?? "Общий зал",
+                    availability,
+                    isCurrent = !string.IsNullOrEmpty(currentPc)
+                        && string.Equals(pc.Name, currentPc, StringComparison.OrdinalIgnoreCase),
+                    mapX = pc.MapX,
+                    mapY = pc.MapY
+                };
+            });
+
+            return Ok(result);
+        }
+
+        /// <summary>Пересадка: перенос активной сессии на другой свободный ПК клуба.</summary>
+        [Authorize]
+        [HttpPost("transfer")]
+        public async Task<IActionResult> TransferSession([FromBody] TransferSessionRequest request)
+        {
+            if (request == null
+                || string.IsNullOrWhiteSpace(request.FromPcName)
+                || string.IsNullOrWhiteSpace(request.ToPcName))
+                return BadRequest(new { error = "Укажите текущий и целевой ПК" });
+
+            if (string.Equals(request.FromPcName, request.ToPcName, StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { error = "Вы уже на этом компьютере" });
+
+            var username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username)) return Unauthorized();
+
+            var from = await _context.Computers.FirstOrDefaultAsync(c => c.Name == request.FromPcName);
+            var to = await _context.Computers.FirstOrDefaultAsync(c => c.Name == request.ToPcName);
+            if (from == null || to == null) return NotFound(new { error = "Компьютер не найден" });
+            if (!to.IsApproved) return BadRequest(new { error = "Целевой ПК не подтверждён" });
+
+            if (from.CurrentUser != username)
+                return Forbid();
+
+            if (!from.SessionEndTime.HasValue || from.SessionEndTime.Value <= DateTime.UtcNow)
+                return BadRequest(new { error = "Нет активной сессии для переноса" });
+
+            if (!string.IsNullOrEmpty(to.CurrentUser) || to.Status == ComputerStatus.Active)
+                return BadRequest(new { error = "Целевой компьютер занят" });
+
+            if (!to.IsOnline)
+                return BadRequest(new { error = "Целевой компьютер оффлайн" });
+
+            var endTime = from.SessionEndTime.Value;
+            var saves = from.SessionSavesRemaining;
+            var tariff = from.CurrentTariffName;
+
+            // Освобождаем текущий
+            from.CurrentUser = null;
+            from.SessionEndTime = null;
+            from.SessionSavesRemaining = true;
+            from.CurrentTariffName = null;
+            from.Status = ComputerStatus.Locked;
+            await _sessionManager.StopSessionAsync(ClubId, from.Name);
+
+            // Занимаем целевой
+            to.CurrentUser = username;
+            to.SessionEndTime = endTime;
+            to.SessionSavesRemaining = saves;
+            to.CurrentTariffName = tariff;
+            to.Status = ComputerStatus.Active;
+            to.IsOnline = true;
+            await _sessionManager.StartSessionAsync(ClubId, to.Name, endTime, username);
+
+            await _context.SaveChangesAsync();
+
+            if (ClubHub.TryGetPcConnection(ClubId, from.Name, out var fromConn) && fromConn != null)
+                await _hubContext.Clients.Client(fromConn).SendAsync(SignalRMethods.ReceiveLock);
+
+            if (ClubHub.TryGetPcConnection(ClubId, to.Name, out var toConn) && toConn != null)
+                await _hubContext.Clients.Client(toConn).SendAsync(SignalRMethods.ReceiveUnlock, endTime);
+
+            var toLabel = string.IsNullOrEmpty(to.DisplayName) ? to.Name : to.DisplayName;
+            return Ok(new
+            {
+                message = "Сессия перенесена",
+                targetPc = to.Name,
+                targetDisplayName = toLabel,
+                endTime
+            });
+        }
+
         [HttpGet("status")]
         public async Task<IActionResult> GetStatus([FromQuery] string mac)
         {

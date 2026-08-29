@@ -28,7 +28,7 @@ namespace AetherShell.Client
 
         private static IntPtr _hookID = IntPtr.Zero;
 
-        /// <summary>Вызывается при нажатии Ctrl+Alt+P (закрытие шелла по паролю). Вызвать из UI-потока.</summary>
+        /// <summary>Вызывается при нажатии Ctrl+Alt+P (высокий доступ). Вызвать из UI-потока.</summary>
         public static Action? OnExitShellHotkeyPressed { get; set; }
 
         /// <summary>Вызывается при нажатии Ctrl+Alt+A (режим администратора). Вызвать из UI-потока.</summary>
@@ -93,10 +93,17 @@ namespace AetherShell.Client
                     // Ctrl + Shift + Esc (Диспетчер задач)
                     if (vkCode == VK_ESCAPE && ctrlDown && shiftDown) return (IntPtr)1;
 
-                    // --- 3. Горячая клавиша закрытия шелла (Ctrl+Alt+P) ---
+                    // --- 3. Высокий доступ (Ctrl+Alt+P) ---
                     if (vkCode == VK_P && ctrlDown && altDown && !shiftDown)
                     {
                         try { OnExitShellHotkeyPressed?.Invoke(); } catch { }
+                        return (IntPtr)1;
+                    }
+
+                    // --- 3.1 Режим администратора (Ctrl+Alt+A) ---
+                    if (vkCode == VK_A && ctrlDown && altDown && !shiftDown)
+                    {
+                        try { OnAdminHotkeyPressed?.Invoke(); } catch { }
                         return (IntPtr)1;
                     }
 

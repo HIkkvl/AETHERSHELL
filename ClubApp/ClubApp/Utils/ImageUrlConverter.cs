@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
@@ -20,19 +21,21 @@ namespace AetherShell.Client.Utils
                     // Если файла нет, UriSource кинет исключение — ловим в catch.
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;
 
-                    if (url.StartsWith("http"))
+                    if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                     {
                         bitmap.UriSource = new Uri(url, UriKind.Absolute);
                     }
-                    else if (url.StartsWith("/"))
+                    else if (url.StartsWith("/") && !url.StartsWith("//"))
                     {
-                        // Картинки из панели приходят путём вида
-                        // /uploads/club-1/xxx.png — дополняем адресом сервера.
                         bitmap.UriSource = new Uri(AppConstants.SERVER_URL + url, UriKind.Absolute);
+                    }
+                    else if (File.Exists(url) || Path.IsPathRooted(url))
+                    {
+                        bitmap.UriSource = new Uri(Path.GetFullPath(url), UriKind.Absolute);
+                        bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
                     }
                     else
                     {
-                        // Локальный относительный или абсолютный путь
                         bitmap.UriSource = new Uri(url, UriKind.RelativeOrAbsolute);
                     }
 

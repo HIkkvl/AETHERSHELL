@@ -14,23 +14,33 @@ namespace AetherShell.Client
 
         private async void InitializeWebView(string url)
         {
-            // 1. Инициализация
-            await webView.EnsureCoreWebView2Async(null);
-
-            // 2. Настройки (отключаем лишнее)
-            webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
-            webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
-            webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false; // Отключаем меню правой кнопки мыши
-
-            // Окно оплаты тоже не должно скачивать файлы
-            webView.CoreWebView2.DownloadStarting += (s, e) =>
+            try
             {
-                e.Cancel = true;
-                e.Handled = true;
-            };
+                await webView.EnsureCoreWebView2Async(null);
 
-            // 4. Загружаем ссылку
-            webView.Source = new Uri(url);
+                webView.CoreWebView2.Settings.IsStatusBarEnabled = false;
+                webView.CoreWebView2.Settings.IsZoomControlEnabled = false;
+                webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+
+                webView.CoreWebView2.DownloadStarting += (s, e) =>
+                {
+                    e.Cancel = true;
+                    e.Handled = true;
+                };
+
+                webView.Source = new Uri(url);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Не удалось открыть страницу оплаты (WebView2).\n\n" +
+                    "Установите «Microsoft Edge WebView2 Runtime» и перезапустите клиент.\n\n" +
+                    ex.Message,
+                    "Оплата",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                Close();
+            }
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)

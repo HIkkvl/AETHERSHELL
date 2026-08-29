@@ -178,6 +178,9 @@ namespace AetherShell.Client.Services
         }
 
         /// <summary>Сообщает, что сейчас в фокусе на этом ПК. null означает «ничего, кроме шелла».</summary>
+
+
+        /// <summary>Сообщает, что сейчас в фокусе на этом ПК. null означает «ничего, кроме шелла».</summary>
         public async Task SendCurrentAppAsync(string processName, string windowTitle)
         {
             if (_hubConnection?.State == HubConnectionState.Connected)

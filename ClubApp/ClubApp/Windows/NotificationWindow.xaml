@@ -1,25 +1,19 @@
 <Window x:Class="AetherShell.Client.NotificationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Notification" Height="40" Width="570"
+        Title="Notification" Height="44" Width="570"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="False" ShowInTaskbar="False" ResizeMode="NoResize"
         ShowActivated="False"
         Loaded="Window_Loaded">
 
-	<Window.Resources>
-		<SolidColorBrush x:Key="BorderBrush" Color="#FF5ED7"/>
-		<SolidColorBrush x:Key="BackgroundBrush" Color="#241820"/>
-	</Window.Resources>
-
 	<Border x:Name="MainBorder"
             CornerRadius="10"
             BorderThickness="1"
-            BorderBrush="{StaticResource BorderBrush}"
-            Background="{StaticResource BackgroundBrush}"
-            Opacity="0">
-
-
+            BorderBrush="#1FFFFFFF"
+            Background="#E60A0612"
+            Opacity="0"
+            Padding="16,0">
 		<Grid x:Name="ContentGrid" VerticalAlignment="Center">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*" x:Name="ColTimer"/>
@@ -28,18 +22,18 @@
 			</Grid.ColumnDefinitions>
 
 			<StackPanel x:Name="TimerPanel" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
-				<TextBlock x:Name="TimerText" Text="До конца сессии осталось 20 минут" Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+				<TextBlock x:Name="TimerText" Text="До конца сессии осталось 20 минут" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
 			</StackPanel>
 
-			<Border x:Name="Divider" Grid.Column="1" Width="1" Background="{StaticResource BorderBrush}" Margin="2,1" Visibility="Collapsed"/>
+			<Border x:Name="Divider" Grid.Column="1" Width="1" Background="#1FFFFFFF" Margin="10,6" Visibility="Collapsed"/>
 
 			<StackPanel x:Name="OrderPanel" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
-				<Ellipse Width="8" Height="8" Fill="#0DFF00" VerticalAlignment="Center" Margin="0,1,8,0">
+				<Ellipse Width="8" Height="8" Fill="#3DDC97" VerticalAlignment="Center" Margin="0,1,8,0">
 					<Ellipse.Effect>
-						<DropShadowEffect Color="#0DFF00" BlurRadius="8" ShadowDepth="0" Opacity="0.9"/>
+						<DropShadowEffect Color="#3DDC97" BlurRadius="8" ShadowDepth="0" Opacity="0.9"/>
 					</Ellipse.Effect>
 				</Ellipse>
-				<TextBlock x:Name="OrderText" Text="Заказ #123: Готовится" Foreground="White" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+				<TextBlock x:Name="OrderText" Text="Заказ #123: Готовится" Foreground="White" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
 			</StackPanel>
 		</Grid>
 	</Border>

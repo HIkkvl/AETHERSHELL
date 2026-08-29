@@ -1,4 +1,6 @@
+using System.Linq;
 using AetherShell.Server.Data;
+using AetherShell.Server.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,10 +22,16 @@ namespace AetherShell.Server.Filters
 
             if (currentClub?.ClubId is > 0) return;
 
-            context.Result = new BadRequestObjectResult(new
-            {
-                error = "Клуб не указан. Передайте заголовок X-Club-Id (веб-панель) или X-Club-Key (шелл)."
-            });
+            var hasKey = !string.IsNullOrWhiteSpace(
+                context.HttpContext.Request.Headers[ClubScopeMiddleware.ClubKeyHeader].FirstOrDefault());
+            var hasId = !string.IsNullOrWhiteSpace(
+                context.HttpContext.Request.Headers[ClubScopeMiddleware.ClubIdHeader].FirstOrDefault());
+
+            var error = (hasKey || hasId)
+                ? "Ключ или id клуба не найдены (клуб неактивен или CLUB_KEY в server.config устарел)."
+                : "Клуб не указан. Передайте заголовок X-Club-Id (веб-панель) или X-Club-Key (шелл).";
+
+            context.Result = new BadRequestObjectResult(new { error });
         }
 
         public void OnActionExecuted(ActionExecutedContext context) { }

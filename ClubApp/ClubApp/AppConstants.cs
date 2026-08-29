@@ -16,7 +16,7 @@ namespace AetherShell.Client
         /// <summary>Ключ клуба из server.config (CLUB_KEY): по нему сервер понимает, к какому клубу относится этот ПК.</summary>
         public static string CLUB_KEY { get; } = ReadSetting("CLUB_KEY", "");
 
-        /// <summary>Пароль для закрытия шелла по Ctrl+Alt+P. Читается из server.config (EXIT_PASSWORD=...). По умолчанию "1478".</summary>
+        /// <summary>Пароль высокого доступа (Ctrl+Alt+P). Читается из server.config (EXIT_PASSWORD=...). По умолчанию "1478".</summary>
         public static string EXIT_SHELL_PASSWORD { get; } = ReadSetting("EXIT_PASSWORD", "1478");
 
         private const string DefaultServerUrl = "http://localhost:5232";

@@ -7,31 +7,31 @@
 
         <utils:ImageUrlConverter x:Key="ImageUrlConverter"/>
 
-        <!-- Figma chat palette: #342735 / #3C2F3D / #FF5ED7 / white 31% -->
-        <Color x:Key="ColorBg">#241820</Color>
-        <Color x:Key="ColorPanel">#342735</Color>
-        <Color x:Key="ColorGlass">#3C2F3D</Color>
-        <Color x:Key="ColorAccent">#FF5ED7</Color>
-        <Color x:Key="ColorAccentDeep">#E04BC0</Color>
-        <Color x:Key="ColorAccentPurple">#8B3A7A</Color>
-        <Color x:Key="ColorMuted">#B8A8B8</Color>
-        <Color x:Key="ColorBorder">#4F4A50</Color>
+        <!-- Figma: dark navy + pink/magenta accents -->
+        <Color x:Key="ColorBg">#0B0E14</Color>
+        <Color x:Key="ColorPanel">#14141F</Color>
+        <Color x:Key="ColorGlass">#1A1A26</Color>
+        <Color x:Key="ColorAccent">#FF4B8B</Color>
+        <Color x:Key="ColorAccentDeep">#E91E63</Color>
+        <Color x:Key="ColorAccentPurple">#9B2D6A</Color>
+        <Color x:Key="ColorMuted">#8A8A9A</Color>
+        <Color x:Key="ColorBorder">#2A2A3A</Color>
 
         <!-- Legacy aliases (keep names used across XAML) -->
-        <Color x:Key="ColorPrimaryGold">#FF5ED7</Color>
-        <Color x:Key="ColorAccentGold">#E04BC0</Color>
+        <Color x:Key="ColorPrimaryGold">#FF4B8B</Color>
+        <Color x:Key="ColorAccentGold">#E91E63</Color>
 
         <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource ColorBg}"/>
         <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource ColorAccent}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource ColorAccent}"/>
-        <SolidColorBrush x:Key="PanelGlassBrush" Color="#CC342735"/>
+        <SolidColorBrush x:Key="PanelGlassBrush" Color="#CC12121B"/>
         <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource ColorMuted}"/>
         <SolidColorBrush x:Key="TextWhiteBrush" Color="White"/>
         <SolidColorBrush x:Key="BorderSubtleBrush" Color="{StaticResource ColorBorder}"/>
 
         <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#FF5ED7" Offset="0"/>
-            <GradientStop Color="#8B3A7A" Offset="1"/>
+            <GradientStop Color="#FF4B8B" Offset="0"/>
+            <GradientStop Color="#9B2D6A" Offset="1"/>
         </LinearGradientBrush>
 
         <Geometry x:Key="IconClock">M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z</Geometry>
@@ -54,13 +54,16 @@
         <Geometry x:Key="IconApps">M4,4H8V8H4V4M4,10H8V14H4V10M4,16H8V20H4V16M10,4H14V8H10V4M10,10H14V14H10V10M10,16H14V20H10V16M16,4H20V8H16V4M16,10H20V14H16V10M16,16H20V20H16V16Z</Geometry>
         <Geometry x:Key="IconFood">M11,9H9V2H7V9H5V2H3V9C3,11.12 4.66,12.84 6.75,12.97V22H9.25V12.97C11.34,12.84 13,11.12 13,9V2H11V9M16,6V14H18.5V22H21V2C18.24,2 16,4.24 16,6Z</Geometry>
         <Geometry x:Key="IconLock">M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z</Geometry>
-        <Geometry x:Key="IconExit">M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z</Geometry>
+        <Geometry x:Key="IconExit">M12.75,31.5 H7.083 C6.332,31.5 5.611,31.184 5.08,30.621 C4.549,30.059 4.25,29.296 4.25,28.5 V7.5 C4.25,6.704 4.549,5.941 5.08,5.379 C5.611,4.816 6.332,4.5 7.083,4.5 H12.75 M22.667,10.5 L29.75,18 L22.667,25.5 M29.75,18 H12.75</Geometry>
+        <Geometry x:Key="IconSwitchPc">M10.666,28 H21.333 M16,22.667 V28 M5.333,4 H26.666 C28.139,4 29.333,5.194 29.333,6.667 V20 C29.333,21.473 28.139,22.667 26.666,22.667 H5.333 C3.86,22.667 2.666,21.473 2.666,20 V6.667 C2.666,5.194 3.86,4 5.333,4 Z</Geometry>
         <Geometry x:Key="IconGrid">M3,3H11V11H3V3M13,3H21V11H13V3M3,13H11V21H3V13M13,13H21V21H13V13Z</Geometry>
+        <Geometry x:Key="IconSliders">M4,6H10M14,6H20M10,4V8M4,12H16M20,12H22M16,10V14M4,18H8M12,18H20M8,16V20</Geometry>
+        <Geometry x:Key="IconZap">M13,2L4,14H11L10,22L19,10H12L13,2Z</Geometry>
 
         <!-- Top text tab -->
         <Style x:Key="ShellNavTabStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="Foreground" Value="#8A8A9A"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="18,10"/>
@@ -87,7 +90,7 @@
         </Style>
 
         <Style x:Key="ShellNavTabActiveStyle" TargetType="Button" BasedOn="{StaticResource ShellNavTabStyle}">
-            <Setter Property="Foreground" Value="#FF5ED7"/>
+            <Setter Property="Foreground" Value="#FF4B8B"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -96,10 +99,10 @@
                                 <ContentPresenter HorizontalAlignment="Center"/>
                                 <Border Height="2" Margin="0,8,0,0" CornerRadius="1">
                                     <Border.Background>
-                                        <SolidColorBrush Color="#FF5ED7"/>
+                                        <SolidColorBrush Color="#FF4B8B"/>
                                     </Border.Background>
                                     <Border.Effect>
-                                        <DropShadowEffect Color="#FF5ED7" BlurRadius="8" ShadowDepth="0" Opacity="0.8"/>
+                                        <DropShadowEffect Color="#FF4B8B" BlurRadius="8" ShadowDepth="0" Opacity="0.8"/>
                                     </Border.Effect>
                                 </Border>
                             </StackPanel>
@@ -121,14 +124,14 @@
                         <Grid Background="Transparent">
                             <Path x:Name="IconPath"
                                   Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Fill="#B8A8B8"
+                                  Fill="#8A8A9A"
                                   Stretch="Uniform"
                                   Width="22" Height="22"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="IconPath" Property="Fill" Value="#FF5ED7"/>
+                                <Setter TargetName="IconPath" Property="Fill" Value="#FF4B8B"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -142,7 +145,7 @@
                     <ControlTemplate TargetType="Button">
                         <Grid>
                             <Path Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Fill="#FF5ED7"
+                                  Fill="#FF4B8B"
                                   Stretch="Uniform"
                                   Width="22" Height="22"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -153,7 +156,7 @@
         </Style>
 
         <Style x:Key="GlassPanelStyle" TargetType="Border">
-            <Setter Property="Background" Value="#B3342735"/>
+            <Setter Property="Background" Value="#B314141F"/>
             <Setter Property="BorderBrush" Value="#4FFFFFFF"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="16"/>
@@ -173,8 +176,8 @@
                         <Border x:Name="Bg" CornerRadius="12" Padding="16,0">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                    <GradientStop Color="#FF5ED7" Offset="0"/>
-                                    <GradientStop Color="#C43AA8" Offset="1"/>
+                                    <GradientStop Color="#FF4B8B" Offset="0"/>
+                                    <GradientStop Color="#C2185B" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -211,8 +214,8 @@
                                     <Border x:Name="MaskingBorder" CornerRadius="18">
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                <GradientStop Color="#3C2F3D" Offset="0"/>
-                                                <GradientStop Color="#241820" Offset="1"/>
+                                                <GradientStop Color="#2A1530" Offset="0"/>
+                                                <GradientStop Color="#12081A" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
                                         <Border.OpacityMask>
@@ -236,7 +239,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Panel.ZIndex" Value="99"/>
-                                <Setter TargetName="HoverBorder" Property="BorderBrush" Value="#FF5ED7"/>
+                                <Setter TargetName="HoverBorder" Property="BorderBrush" Value="#FF4B8B"/>
                                 <Trigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
@@ -263,7 +266,7 @@
         <!-- Left category item -->
         <Style x:Key="CategorySideItemStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="Foreground" Value="#8A8A9A"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -282,7 +285,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#22FF5ED7"/>
+                                <Setter TargetName="border" Property="Background" Value="#22FF4B8B"/>
                                 <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -294,8 +297,8 @@
         <Style x:Key="CategoryPillStyle" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Margin" Value="0,0,10,0"/>
-            <Setter Property="Background" Value="#342735"/>
-            <Setter Property="Foreground" Value="#B8A8B8"/>
+            <Setter Property="Background" Value="#14141F"/>
+            <Setter Property="Foreground" Value="#8A8A9A"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -327,20 +330,20 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Card" CornerRadius="20" BorderThickness="1" BorderBrush="#4FFFFFFF" Background="#B3342735" Padding="20">
+                        <Border x:Name="Card" CornerRadius="20" BorderThickness="1" BorderBrush="#33FFFFFF" Background="#B314141F" Padding="20">
                             <Grid>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock Text="{Binding Name}" Foreground="White" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center" TextAlignment="Center"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,0">
-                                        <TextBlock Text="{Binding Price}" Foreground="#FF5ED7" FontSize="40" FontWeight="Bold"/>
-                                        <TextBlock Text=" тг" Foreground="#B8A8B8" FontSize="16" VerticalAlignment="Bottom" Margin="0,0,0,8"/>
+                                        <TextBlock Text="{Binding Price}" Foreground="#FF4B8B" FontSize="40" FontWeight="Bold"/>
+                                        <TextBlock Text=" тг" Foreground="#8A8A9A" FontSize="16" VerticalAlignment="Bottom" Margin="0,0,0,8"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Card" Property="BorderBrush" Value="#FF5ED7"/>
+                                <Setter TargetName="Card" Property="BorderBrush" Value="#FF4B8B"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -358,31 +361,31 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="CardBorder" RenderTransformOrigin="0.5,0.5" CornerRadius="18" BorderThickness="1" BorderBrush="#4FFFFFFF" Background="#B3342735" ClipToBounds="True">
+                        <Border x:Name="CardBorder" RenderTransformOrigin="0.5,0.5" CornerRadius="18" BorderThickness="1" BorderBrush="#33FFFFFF" Background="#B314141F" ClipToBounds="True">
                             <Border.RenderTransform>
                                 <ScaleTransform x:Name="ScaleT" ScaleX="1" ScaleY="1"/>
                             </Border.RenderTransform>
                             <Grid>
                                 <StackPanel Margin="18,16,18,16">
-                                    <Border Background="#FF5ED7" Width="72" Height="4" CornerRadius="2" HorizontalAlignment="Center" Margin="0,0,0,14"/>
+                                    <Border Background="#FF4B8B" Width="72" Height="4" CornerRadius="2" HorizontalAlignment="Center" Margin="0,0,0,14"/>
                                     <TextBlock Text="{Binding Name}" Foreground="White" FontSize="20" FontWeight="SemiBold" TextAlignment="Center" Margin="0,0,0,14"/>
                                     <StackPanel Margin="0,0,0,12">
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF4B8B" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
                                             <TextBlock Text="{Binding Feature1}" Foreground="#C8C8D0" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF4B8B" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
                                             <TextBlock Text="{Binding Feature2}" Foreground="#C8C8D0" FontSize="13" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                                            <Path Data="{StaticResource IconCheck}" Fill="#FF5ED7" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
-                                            <TextBlock Text="{Binding BurnLabel}" Foreground="#FF5ED7" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <Path Data="{StaticResource IconCheck}" Fill="#FF4B8B" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding BurnLabel}" Foreground="#FF4B8B" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,14">
-                                        <TextBlock Text="{Binding Price, StringFormat={}{0:N0}}" Foreground="#FF5ED7" FontSize="32" FontWeight="Bold"/>
-                                        <TextBlock Text=" тг" Foreground="#B8A8B8" FontSize="14" VerticalAlignment="Bottom" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:N0}}" Foreground="#FF4B8B" FontSize="32" FontWeight="Bold"/>
+                                        <TextBlock Text=" тг" Foreground="#8A8A9A" FontSize="14" VerticalAlignment="Bottom" Margin="0,0,0,6"/>
                                     </StackPanel>
                                     <Border Background="{StaticResource AccentGradientBrush}" CornerRadius="10" Padding="0,10" HorizontalAlignment="Stretch">
                                         <TextBlock Text="Купить" Foreground="White" FontSize="14" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center"/>
@@ -393,7 +396,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Panel.ZIndex" Value="99"/>
-                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#FF5ED7"/>
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#FF4B8B"/>
                                 <Trigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>

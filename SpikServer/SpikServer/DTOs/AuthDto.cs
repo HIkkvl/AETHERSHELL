@@ -22,6 +22,12 @@ namespace AetherShell.Server.DTOs
         public int TariffId { get; set; }
     }
 
+    public class TransferSessionRequest
+    {
+        public string FromPcName { get; set; } = "";
+        public string ToPcName { get; set; } = "";
+    }
+
     public class ForgotPasswordDto
     {
         public string Email { get; set; } = "";

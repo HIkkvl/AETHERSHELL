@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
@@ -12,42 +13,92 @@ namespace AetherShell.Installer
 {
     public partial class InstallerForm : Form
     {
-        private Label titleLabel;
         private Label statusLabel;
-        private ProgressBar progressBar;
+        private Label serverHintLabel;
+        private Label headerLeftLabel;
+        private Label headerRightLabel;
+        private Label brandTitleLabel;
+        private Label brandSubLabel;
+        private Label footerLabel;
         private TextBox serverUrlBox;
         private TextBox usernameBox;
         private TextBox passwordBox;
         private CheckBox autoLoginCheck;
         private Button installButton;
-        private Label serverLabel;
-        private Label serverHintLabel;
+        private Button closeButton;
+        private Panel optionsPanel;
         private Label userLabel;
         private Label passLabel;
+        private Label serverLabel;
 
         private readonly string _installPath = @"C:\AetherShell";
         private readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
 
-        /// <summary>Ключ клуба из скачанного архива: определяет, к какому клубу привяжется этот ПК.</summary>
         private string _clubKey = "";
         private string _clubName = "";
+        private int _progress;
+        private float _animPhase;
+        private float _ringAngle;
+        private readonly System.Windows.Forms.Timer _animTimer;
+        private bool _installing;
+        private Image? _logoImage;
+
+        private static readonly Color BgDeep = Color.FromArgb(4, 2, 8);
+        private static readonly Color AccentPink = Color.FromArgb(255, 55, 95);
+        private static readonly Color AccentPurple = Color.FromArgb(191, 90, 242);
+        private static readonly Color Muted = Color.FromArgb(162, 153, 184);
+        private static readonly Color FieldBg = Color.FromArgb(18, 12, 28);
+        private static readonly Color FieldBorder = Color.FromArgb(40, 255, 255, 255);
 
         public InstallerForm()
         {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                     ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
+            _animTimer = new System.Windows.Forms.Timer { Interval = 33 };
+            _animTimer.Tick += (_, __) =>
+            {
+                _animPhase += 0.018f;
+                _ringAngle = (_ringAngle + 1.6f) % 360f;
+                Invalidate();
+            };
+            _animTimer.Start();
+            _logoImage = LoadEmbeddedLogo();
             TryLoadServerConfig();
         }
 
-        /// <summary>
-        /// Установщик приходит в архиве вместе с server.config, где уже прописаны
-        /// адрес сервера и ключ клуба, поэтому вводить ничего не нужно.
-        /// </summary>
+        private static Image? LoadEmbeddedLogo()
+        {
+            try
+            {
+                var asm = typeof(InstallerForm).Assembly;
+                var name = Array.Find(asm.GetManifestResourceNames(),
+                    n => n.EndsWith("aether-logo.png", StringComparison.OrdinalIgnoreCase));
+                if (name == null) return null;
+                using var stream = asm.GetManifestResourceStream(name);
+                if (stream == null) return null;
+                return Image.FromStream(stream);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _animTimer.Stop();
+            _animTimer.Dispose();
+            _logoImage?.Dispose();
+            base.OnFormClosed(e);
+        }
+
         private void TryLoadServerConfig()
         {
             var configPath = ResolveBesideInstaller("server.config");
             if (configPath == null)
             {
-                serverHintLabel.Text = "server.config не найден: распакуйте весь zip из кабинета (exe + server.config рядом)";
+                serverHintLabel.Text = "server.config не найден — распакуйте zip из кабинета целиком";
                 serverHintLabel.ForeColor = Color.FromArgb(240, 140, 100);
                 return;
             }
@@ -68,7 +119,7 @@ namespace AetherShell.Installer
                         case "SERVER_URL":
                             serverUrlBox.Text = value;
                             serverUrlBox.ReadOnly = true;
-                            serverUrlBox.ForeColor = Color.FromArgb(100, 200, 100);
+                            serverUrlBox.ForeColor = Color.FromArgb(180, 255, 200);
                             break;
                         case "CLUB_KEY":
                             _clubKey = value;
@@ -81,8 +132,8 @@ namespace AetherShell.Installer
 
                 if (_clubName.Length > 0)
                 {
-                    serverHintLabel.Text = $"Клуб: {_clubName}";
-                    serverHintLabel.ForeColor = Color.FromArgb(100, 200, 100);
+                    serverHintLabel.Text = "Клуб: " + _clubName;
+                    serverHintLabel.ForeColor = Color.FromArgb(120, 220, 160);
                 }
             }
             catch (Exception ex)
@@ -92,10 +143,6 @@ namespace AetherShell.Installer
             }
         }
 
-        /// <summary>
-        /// Каталог с запущенным exe. У single-file publish <see cref="AppContext.BaseDirectory"/>
-        /// указывает во временную папку распаковки .NET — рядом с ней нет server.config из zip.
-        /// </summary>
         private static string GetInstallerDirectory()
         {
             try
@@ -108,7 +155,7 @@ namespace AetherShell.Installer
                         return dir;
                 }
             }
-            catch { /* fallback below */ }
+            catch { }
 
             try
             {
@@ -121,7 +168,7 @@ namespace AetherShell.Installer
                         return dir;
                 }
             }
-            catch { /* fallback below */ }
+            catch { }
 
             var cwd = Directory.GetCurrentDirectory();
             if (!string.IsNullOrEmpty(cwd))
@@ -130,7 +177,6 @@ namespace AetherShell.Installer
             return AppContext.BaseDirectory;
         }
 
-        /// <summary>Ищет файл рядом с установщиком, затем в текущей папке и в BaseDirectory.</summary>
         private static string? ResolveBesideInstaller(string fileName)
         {
             foreach (var dir in new[]
@@ -147,181 +193,359 @@ namespace AetherShell.Installer
                     if (File.Exists(path))
                         return path;
                 }
-                catch { /* next */ }
+                catch { }
             }
             return null;
         }
 
         private void InitializeComponent()
         {
-            this.Text = "Spik Client - Установка";
-            this.Size = new Size(500, 450);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(15, 23, 42);
+            Text = "AetherShell — Установка";
+            Size = new Size(1000, 700);
+            FormBorderStyle = FormBorderStyle.None;
+            MaximizeBox = false;
+            StartPosition = FormStartPosition.CenterScreen;
+            BackColor = BgDeep;
+            Font = new Font("Segoe UI", 10f);
 
-            // Title
-            titleLabel = new Label
+            headerLeftLabel = MakeLabel("ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ", 12f, FontStyle.Bold, Muted, ContentAlignment.MiddleLeft);
+            headerLeftLabel.Location = new Point(48, 24);
+            headerLeftLabel.Size = new Size(360, 24);
+            headerLeftLabel.ForeColor = Color.FromArgb(110, Muted);
+
+            headerRightLabel = MakeLabel("Desktop v2.4.0", 12f, FontStyle.Bold, Muted, ContentAlignment.MiddleRight);
+            headerRightLabel.Location = new Point(Width - 220, 24);
+            headerRightLabel.Size = new Size(170, 24);
+            headerRightLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            headerRightLabel.ForeColor = Color.FromArgb(110, Muted);
+
+            closeButton = new Button
             {
-                Text = "🎮 Установка Spik Client",
-                Font = new Font("Segoe UI", 20, FontStyle.Bold),
-                ForeColor = Color.White,
-                AutoSize = true,
-                Location = new Point(30, 20)
+                Text = "✕",
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(36, 32),
+                Location = new Point(Width - 48, 16),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                BackColor = Color.Transparent,
+                ForeColor = Muted,
+                Cursor = Cursors.Hand,
+                TabStop = false
             };
-            this.Controls.Add(titleLabel);
+            closeButton.FlatAppearance.BorderSize = 0;
+            closeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 255, 55, 95);
+            closeButton.Click += (_, __) => Close();
 
-            // Адрес сервера — обычно уже заполнен из server.config рядом с установщиком
-            serverLabel = new Label
+            brandTitleLabel = MakeLabel("AETHERSHELL", 36f, FontStyle.Bold, Color.White, ContentAlignment.MiddleCenter);
+            brandTitleLabel.Size = new Size(600, 70);
+            brandTitleLabel.Location = new Point((Width - 600) / 2, 250);
+
+            brandSubLabel = MakeLabel("УСТАНОВКА ШЕЛЛА", 13f, FontStyle.Bold, Muted, ContentAlignment.MiddleCenter);
+            brandSubLabel.Size = new Size(600, 24);
+            brandSubLabel.Location = new Point((Width - 600) / 2, 318);
+
+            optionsPanel = new Panel
             {
-                Text = "Адрес сервера:",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.FromArgb(148, 163, 184),
-                Location = new Point(30, 80),
-                AutoSize = true
+                Size = new Size(480, 210),
+                Location = new Point((Width - 480) / 2, 360),
+                BackColor = Color.FromArgb(18, 255, 255, 255)
             };
-            this.Controls.Add(serverLabel);
+            // glass-ish via paint
+            optionsPanel.Paint += OptionsPanel_Paint;
 
-            serverUrlBox = new TextBox
-            {
-                Text = "",
-                Font = new Font("Segoe UI", 12),
-                Location = new Point(30, 105),
-                Size = new Size(420, 30),
-                BackColor = Color.FromArgb(30, 41, 59),
-                ForeColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            this.Controls.Add(serverUrlBox);
+            serverLabel = MakeLabel("АДРЕС СЕРВЕРА", 9f, FontStyle.Bold, Muted, ContentAlignment.MiddleLeft);
+            serverLabel.Location = new Point(20, 12);
+            serverLabel.Size = new Size(200, 16);
 
-            serverHintLabel = new Label
-            {
-                Text = "Заполняется автоматически из server.config",
-                Font = new Font("Segoe UI", 8),
-                ForeColor = Color.FromArgb(100, 116, 139),
-                Location = new Point(30, 138),
-                AutoSize = true
-            };
-            this.Controls.Add(serverHintLabel);
+            serverUrlBox = MakeField(new Point(20, 32), new Size(440, 32));
 
-            // Auto login checkbox
+            serverHintLabel = MakeLabel("Заполняется из server.config", 8.5f, FontStyle.Regular, Color.FromArgb(100, 116, 139), ContentAlignment.MiddleLeft);
+            serverHintLabel.Location = new Point(20, 68);
+            serverHintLabel.Size = new Size(440, 18);
+
             autoLoginCheck = new CheckBox
             {
-                Text = "Настроить автоматический вход в Windows",
-                Font = new Font("Segoe UI", 10),
+                Text = "Автоматический вход в Windows",
+                Font = new Font("Segoe UI", 9.5f),
                 ForeColor = Color.White,
-                Location = new Point(30, 150),
-                AutoSize = true,
-                Checked = true
+                Location = new Point(20, 94),
+                Size = new Size(300, 22),
+                Checked = true,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent
             };
             autoLoginCheck.CheckedChanged += AutoLoginCheck_Changed;
-            this.Controls.Add(autoLoginCheck);
 
-            // Username
-            userLabel = new Label
-            {
-                Text = "Имя пользователя Windows:",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.FromArgb(148, 163, 184),
-                Location = new Point(30, 185),
-                AutoSize = true
-            };
-            this.Controls.Add(userLabel);
+            userLabel = MakeLabel("ПОЛЬЗОВАТЕЛЬ", 9f, FontStyle.Bold, Muted, ContentAlignment.MiddleLeft);
+            userLabel.Location = new Point(20, 124);
+            userLabel.Size = new Size(200, 16);
 
-            usernameBox = new TextBox
-            {
-                Text = Environment.UserName,
-                Font = new Font("Segoe UI", 12),
-                Location = new Point(30, 210),
-                Size = new Size(200, 30),
-                BackColor = Color.FromArgb(30, 41, 59),
-                ForeColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            this.Controls.Add(usernameBox);
+            usernameBox = MakeField(new Point(20, 144), new Size(200, 32));
+            usernameBox.Text = Environment.UserName;
 
-            // Password
-            passLabel = new Label
-            {
-                Text = "Пароль Windows:",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.FromArgb(148, 163, 184),
-                Location = new Point(250, 185),
-                AutoSize = true
-            };
-            this.Controls.Add(passLabel);
+            passLabel = MakeLabel("ПАРОЛЬ", 9f, FontStyle.Bold, Muted, ContentAlignment.MiddleLeft);
+            passLabel.Location = new Point(240, 124);
+            passLabel.Size = new Size(200, 16);
 
-            passwordBox = new TextBox
-            {
-                Font = new Font("Segoe UI", 12),
-                Location = new Point(250, 210),
-                Size = new Size(200, 30),
-                BackColor = Color.FromArgb(30, 41, 59),
-                ForeColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle,
-                UseSystemPasswordChar = true
-            };
-            this.Controls.Add(passwordBox);
+            passwordBox = MakeField(new Point(240, 144), new Size(220, 32));
+            passwordBox.UseSystemPasswordChar = true;
 
-            // Progress bar
-            progressBar = new ProgressBar
-            {
-                Location = new Point(30, 280),
-                Size = new Size(420, 25),
-                Style = ProgressBarStyle.Continuous
-            };
-            this.Controls.Add(progressBar);
+            optionsPanel.Controls.Add(serverLabel);
+            optionsPanel.Controls.Add(serverUrlBox);
+            optionsPanel.Controls.Add(serverHintLabel);
+            optionsPanel.Controls.Add(autoLoginCheck);
+            optionsPanel.Controls.Add(userLabel);
+            optionsPanel.Controls.Add(usernameBox);
+            optionsPanel.Controls.Add(passLabel);
+            optionsPanel.Controls.Add(passwordBox);
 
-            // Status
-            statusLabel = new Label
-            {
-                Text = "Готов к установке",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.FromArgb(148, 163, 184),
-                Location = new Point(30, 310),
-                Size = new Size(420, 20)
-            };
-            this.Controls.Add(statusLabel);
-
-            // Install button
             installButton = new Button
             {
-                Text = "🚀 Установить",
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                Location = new Point(30, 350),
-                Size = new Size(420, 50),
-                BackColor = Color.FromArgb(99, 102, 241),
+                Text = "Установить",
+                Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+                Size = new Size(480, 44),
+                Location = new Point((Width - 480) / 2, 582),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
             installButton.FlatAppearance.BorderSize = 0;
+            installButton.Paint += InstallButton_Paint;
             installButton.Click += InstallButton_Click;
-            this.Controls.Add(installButton);
+
+            statusLabel = MakeLabel("ГОТОВ К УСТАНОВКЕ", 11f, FontStyle.Bold, Muted, ContentAlignment.MiddleCenter);
+            statusLabel.Size = new Size(480, 22);
+            statusLabel.Location = new Point((Width - 480) / 2, 548);
+
+            footerLabel = MakeLabel("POWERED BY AETHERSHELL", 10f, FontStyle.Bold, Color.FromArgb(70, Muted), ContentAlignment.MiddleCenter);
+            footerLabel.Size = new Size(480, 18);
+            footerLabel.Location = new Point((Width - 480) / 2, 608);
+            footerLabel.Anchor = AnchorStyles.Bottom;
+
+            Controls.Add(headerLeftLabel);
+            Controls.Add(headerRightLabel);
+            Controls.Add(closeButton);
+            Controls.Add(brandTitleLabel);
+            Controls.Add(brandSubLabel);
+            Controls.Add(optionsPanel);
+            Controls.Add(statusLabel);
+            Controls.Add(installButton);
+            Controls.Add(footerLabel);
+
+            // Logo sits in painted area above brand — leave space: move brand lower when options shown.
+            // Adjust layout for splash-first: logo in paint (y~120), brand at 250.
+            LayoutModeReady();
         }
 
-        private void AutoLoginCheck_Changed(object sender, EventArgs e)
+        private void LayoutModeReady()
+        {
+            brandTitleLabel.Location = new Point((Width - 600) / 2, 150);
+            brandSubLabel.Location = new Point((Width - 600) / 2, 218);
+            optionsPanel.Visible = true;
+            optionsPanel.Location = new Point((Width - 480) / 2, 260);
+            statusLabel.Location = new Point((Width - 480) / 2, 500);
+            installButton.Visible = true;
+            installButton.Location = new Point((Width - 480) / 2, 560);
+            footerLabel.Location = new Point((Width - 480) / 2, 630);
+        }
+
+        private void LayoutModeInstalling()
+        {
+            optionsPanel.Visible = false;
+            installButton.Visible = false;
+            brandTitleLabel.Location = new Point((Width - 600) / 2, 250);
+            brandSubLabel.Location = new Point((Width - 600) / 2, 318);
+            statusLabel.Location = new Point((Width - 480) / 2, 520);
+            footerLabel.Location = new Point((Width - 480) / 2, 600);
+        }
+
+        private static Label MakeLabel(string text, float size, FontStyle style, Color color, ContentAlignment align)
+        {
+            return new Label
+            {
+                Text = text,
+                Font = new Font("Segoe UI", size, style),
+                ForeColor = color,
+                BackColor = Color.Transparent,
+                TextAlign = align,
+                AutoSize = false
+            };
+        }
+
+        private static TextBox MakeField(Point location, Size size)
+        {
+            return new TextBox
+            {
+                Location = location,
+                Size = size,
+                Font = new Font("Segoe UI", 11f),
+                BackColor = FieldBg,
+                ForeColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+        }
+
+        private void OptionsPanel_Paint(object? sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            using var path = RoundedRect(new Rectangle(0, 0, optionsPanel.Width - 1, optionsPanel.Height - 1), 16);
+            using (var brush = new SolidBrush(Color.FromArgb(14, 255, 255, 255)))
+                g.FillPath(brush, path);
+            using (var pen = new Pen(Color.FromArgb(36, 255, 255, 255), 1f))
+                g.DrawPath(pen, path);
+        }
+
+        private void InstallButton_Paint(object? sender, PaintEventArgs e)
+        {
+            var btn = (Button)sender!;
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            var rect = new Rectangle(0, 0, btn.Width - 1, btn.Height - 1);
+            using var path = RoundedRect(rect, 8);
+            using (var brush = new LinearGradientBrush(rect, AccentPink, AccentPurple, 0f))
+                g.FillPath(brush, path);
+            if (!btn.Enabled)
+            {
+                using var dim = new SolidBrush(Color.FromArgb(120, 0, 0, 0));
+                g.FillPath(dim, path);
+            }
+            TextRenderer.DrawText(g, btn.Text, btn.Font, rect, Color.White,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            using (var bg = new LinearGradientBrush(ClientRectangle, BgDeep, Color.FromArgb(22, 8, 40), 45f))
+                g.FillRectangle(bg, ClientRectangle);
+
+            DrawAmbientBlob(g, 0.28f + 0.08f * MathF.Sin(_animPhase),
+                new PointF(Width * 0.28f + 40 * MathF.Sin(_animPhase * 0.7f), Height * 0.35f + 30 * MathF.Cos(_animPhase * 0.5f)),
+                420, Color.FromArgb(140, 191, 90, 242));
+            DrawAmbientBlob(g, 0.32f + 0.1f * MathF.Cos(_animPhase * 0.9f),
+                new PointF(Width * 0.72f + 50 * MathF.Cos(_animPhase * 0.6f), Height * 0.55f + 40 * MathF.Sin(_animPhase * 0.8f)),
+                340, Color.FromArgb(150, 255, 55, 95));
+            DrawAmbientBlob(g, 0.22f + 0.06f * MathF.Sin(_animPhase * 1.1f),
+                new PointF(Width * 0.55f, Height * 0.2f + 25 * MathF.Sin(_animPhase)),
+                280, Color.FromArgb(100, 139, 92, 246));
+
+            // Logo circle above brand
+            float logoY = _installing ? 120f : 70f;
+            float logoSize = _installing ? 120f : 88f;
+            DrawLogo(g, Width / 2f, logoY, logoSize);
+
+            // Progress track (always, more visible while installing)
+            float barWidth = 480f;
+            float barX = (Width - barWidth) / 2f;
+            float barY = _installing ? 480f : 488f;
+            DrawProgressBar(g, barX, barY, barWidth, Math.Max(_progress, _installing ? 2 : 0));
+        }
+
+        private static void DrawAmbientBlob(Graphics g, float opacity, PointF center, float radius, Color color)
+        {
+            var rect = new RectangleF(center.X - radius, center.Y - radius, radius * 2, radius * 2);
+            using var path = new GraphicsPath();
+            path.AddEllipse(rect);
+            using var brush = new PathGradientBrush(path)
+            {
+                CenterColor = Color.FromArgb((int)(opacity * 255), color),
+                SurroundColors = new[] { Color.FromArgb(0, color) }
+            };
+            g.FillPath(brush, path);
+        }
+
+        private void DrawLogo(Graphics g, float cx, float cy, float size)
+        {
+            var dest = new RectangleF(cx - size / 2f, cy - size / 2f, size, size);
+
+            // Soft glow behind logo
+            using (var glow = new SolidBrush(Color.FromArgb(50, AccentPurple)))
+                g.FillEllipse(glow, dest.X - 10, dest.Y - 10, dest.Width + 20, dest.Height + 20);
+
+            if (_logoImage != null)
+            {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.DrawImage(_logoImage, dest);
+                return;
+            }
+
+            // Fallback geometric mark if asset missing
+            float r = size / 2f;
+            using (var pen = new Pen(Color.FromArgb(90, AccentPurple), 2.2f))
+                g.DrawEllipse(pen, cx - r, cy - r, size, size);
+            using (var pen = new Pen(AccentPink, 3.2f))
+            {
+                pen.StartCap = LineCap.Round;
+                pen.EndCap = LineCap.Round;
+                g.DrawArc(pen, cx - r, cy - r, size, size, _ringAngle, 110);
+            }
+        }
+
+        private void DrawProgressBar(Graphics g, float x, float y, float width, int progress)
+        {
+            float height = 6f;
+            var track = new RectangleF(x, y, width, height);
+            using (var path = RoundedRectF(track, 3))
+            using (var brush = new SolidBrush(Color.FromArgb(18, 255, 255, 255)))
+                g.FillPath(brush, path);
+
+            float fillW = Math.Max(8f, width * Math.Clamp(progress, 0, 100) / 100f);
+            var fill = new RectangleF(x, y, fillW, height);
+            using (var path = RoundedRectF(fill, 3))
+            using (var brush = new LinearGradientBrush(fill, AccentPink, AccentPurple, 0f))
+                g.FillPath(brush, path);
+
+            float bulbX = x + fillW;
+            float bulbY = y + height / 2f;
+            using (var glow = new SolidBrush(Color.FromArgb(90, 255, 255, 255)))
+                g.FillEllipse(glow, bulbX - 10, bulbY - 10, 20, 20);
+            using (var core = new SolidBrush(Color.White))
+                g.FillEllipse(core, bulbX - 5, bulbY - 5, 10, 10);
+        }
+
+        private static GraphicsPath RoundedRect(Rectangle rect, int radius)
+        {
+            return RoundedRectF(rect, radius);
+        }
+
+        private static GraphicsPath RoundedRectF(RectangleF rect, float radius)
+        {
+            float d = radius * 2;
+            var path = new GraphicsPath();
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        private void AutoLoginCheck_Changed(object? sender, EventArgs e)
         {
             usernameBox.Enabled = autoLoginCheck.Checked;
             passwordBox.Enabled = autoLoginCheck.Checked;
-            userLabel.ForeColor = autoLoginCheck.Checked ? Color.FromArgb(148, 163, 184) : Color.Gray;
-            passLabel.ForeColor = autoLoginCheck.Checked ? Color.FromArgb(148, 163, 184) : Color.Gray;
+            userLabel.ForeColor = autoLoginCheck.Checked ? Muted : Color.Gray;
+            passLabel.ForeColor = autoLoginCheck.Checked ? Muted : Color.Gray;
         }
 
-        private async void InstallButton_Click(object sender, EventArgs e)
+        private async void InstallButton_Click(object? sender, EventArgs e)
         {
             installButton.Enabled = false;
-            
             try
             {
                 await InstallAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка установки: {ex.Message}", "Ошибка", 
+                MessageBox.Show($"Ошибка установки: {ex.Message}", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _installing = false;
+                LayoutModeReady();
                 installButton.Enabled = true;
+                Invalidate();
             }
         }
 
@@ -351,53 +575,47 @@ namespace AetherShell.Installer
                 }
             }
 
-            // Шаг 1: Создание папки
-            UpdateStatus("Создание папки установки...", 10);
-            if (!Directory.Exists(_installPath))
-            {
-                Directory.CreateDirectory(_installPath);
-            }
+            _installing = true;
+            LayoutModeInstalling();
+            brandSubLabel.Text = "УСТАНОВКА ШЕЛЛА";
+            Invalidate();
 
-            // Шаг 2: Скачивание/копирование файлов
-            UpdateStatus("Получение файлов клиента...", 20);
+            UpdateStatus("СОЗДАНИЕ ПАПКИ УСТАНОВКИ...", 10);
+            if (!Directory.Exists(_installPath))
+                Directory.CreateDirectory(_installPath);
+
+            UpdateStatus("ПОЛУЧЕНИЕ ФАЙЛОВ КЛИЕНТА...", 20);
             await CopyClientFilesAsync(serverUrl);
 
-            // Шаг 3: Конфиг с адресом сервера и ключом клуба
-            UpdateStatus("Настройка подключения к серверу...", 40);
+            UpdateStatus("НАСТРОЙКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ...", 40);
             UpdateServerConfig(serverUrl);
 
-            // Шаг 4: Установка Watchdog службы
-            UpdateStatus("Установка службы мониторинга...", 50);
+            UpdateStatus("УСТАНОВКА СЛУЖБЫ МОНИТОРИНГА...", 50);
             InstallWatchdogService();
 
-            // Шаг 5: Отключение Explorer и замена Shell
-            UpdateStatus("Отключение стандартного Explorer...", 60);
+            UpdateStatus("ОТКЛЮЧЕНИЕ EXPLORER...", 60);
             DisableExplorerShell();
 
-            // Шаг 6: Настройка автозапуска
-            UpdateStatus("Настройка автозапуска...", 70);
+            UpdateStatus("НАСТРОЙКА АВТОЗАПУСКА...", 70);
             SetupAutoStart();
 
-            // Шаг 7: Настройка автологина
             if (autoLoginCheck.Checked)
             {
-                UpdateStatus("Настройка автоматического входа...", 85);
+                UpdateStatus("НАСТРОЙКА АВТОМАТИЧЕСКОГО ВХОДА...", 85);
                 SetupAutoLogin(usernameBox.Text, passwordBox.Text);
             }
 
-            UpdateStatus("Установка завершена!", 100);
-            
-            // Проверяем что установлено
+            UpdateStatus("ОПТИМИЗАЦИЯ ОКРУЖЕНИЯ...", 95);
+            await Task.Delay(400);
+            UpdateStatus("УСТАНОВКА ЗАВЕРШЕНА", 100);
+
             var clientExe = Path.Combine(_installPath, "AetherShell.Client.exe");
             if (!File.Exists(clientExe))
-            {
-                clientExe = Path.Combine(_installPath, "clubApp.exe"); // legacy name
-            }
-            
+                clientExe = Path.Combine(_installPath, "clubApp.exe");
+
             var filesInstalled = File.Exists(clientExe);
             var fileCount = filesInstalled ? Directory.GetFiles(_installPath, "*.*", SearchOption.AllDirectories).Length : 0;
-            
-            // Проверяем shell в реестре
+
             string? shellValue = null;
             try
             {
@@ -405,30 +623,33 @@ namespace AetherShell.Installer
                 shellValue = key?.GetValue("Shell")?.ToString();
             }
             catch { }
-            
+
             var shellReplaced = shellValue != null && (shellValue.Contains("clubApp") || shellValue.Contains("SpikClient") || shellValue.Contains("AetherShell.Client"));
-            
+
             var summary = $"Установка завершена!\n\n" +
-                $"📁 Файлов установлено: {fileCount}\n" +
-                $"📍 Путь: {_installPath}\n" +
-                $"🖥️ Shell заменён: {(shellReplaced ? "Да" : "Нет")}\n" +
-                $"🔧 Shell в реестре: {shellValue ?? "не найден"}\n\n" +
+                $"Файлов установлено: {fileCount}\n" +
+                $"Путь: {_installPath}\n" +
+                $"Shell заменён: {(shellReplaced ? "Да" : "Нет")}\n" +
+                $"Shell в реестре: {shellValue ?? "не найден"}\n\n" +
                 $"Перезагрузить компьютер сейчас?";
-            
-            var result = MessageBox.Show(summary, "Установка завершена", 
+
+            var result = MessageBox.Show(summary, "Установка завершена",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                Process.Start("shutdown", "/r /t 5 /c \"Перезагрузка для завершения установки Spik Client\"");
+                Process.Start("shutdown", "/r /t 5 /c \"Перезагрузка для завершения установки AetherShell\"");
                 Application.Exit();
+            }
+            else
+            {
+                _installing = false;
+                LayoutModeReady();
+                installButton.Enabled = true;
+                Invalidate();
             }
         }
 
-        /// <summary>
-        /// Приводит ввод к абсолютному URL. Голый хост считаем https:
-        /// сервер теперь публичный, а не машина в локальной сети клуба.
-        /// </summary>
         private static string? NormalizeServerUrl(string raw)
         {
             var value = (raw ?? "").Trim().TrimEnd('/');
@@ -446,8 +667,7 @@ namespace AetherShell.Installer
         private async Task CopyClientFilesAsync(string serverUrl)
         {
             var installerDir = GetInstallerDirectory();
-            
-            // Сначала проверяем локальные файлы (они приоритетнее)
+
             var possibleSources = new[]
             {
                 Path.Combine(installerDir, "ClientFiles"),
@@ -463,80 +683,69 @@ namespace AetherShell.Installer
             {
                 var fullPath = Path.GetFullPath(src);
                 var hasClient = File.Exists(Path.Combine(fullPath, "AetherShell.Client.exe")) || File.Exists(Path.Combine(fullPath, "SpikClient.exe")) || File.Exists(Path.Combine(fullPath, "clubApp.exe"));
-                
+
                 if (Directory.Exists(fullPath) && hasClient)
                 {
                     sourceDir = fullPath;
-                    UpdateStatus($"Найдены локальные файлы: {fullPath}", 22);
+                    UpdateStatus("НАЙДЕНЫ ЛОКАЛЬНЫЕ ФАЙЛЫ...", 22);
                     break;
                 }
             }
 
-            // Если локальные файлы найдены - копируем их
             if (sourceDir != null)
             {
-                UpdateStatus("Копирование файлов клиента...", 25);
+                UpdateStatus("КОПИРОВАНИЕ ФАЙЛОВ КЛИЕНТА...", 25);
                 int fileCount = 0;
-                
+
                 foreach (var file in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
                 {
                     var relativePath = Path.GetRelativePath(sourceDir, file);
                     var destPath = Path.Combine(_installPath, relativePath);
-                    
+
                     var destDir = Path.GetDirectoryName(destPath);
                     if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
-                    {
                         Directory.CreateDirectory(destDir);
-                    }
-                    
+
                     File.Copy(file, destPath, true);
                     fileCount++;
                 }
-                
-                UpdateStatus($"Скопировано {fileCount} файлов", 35);
-                
-                // Также копируем Watchdog если есть
+
+                UpdateStatus($"СКОПИРОВАНО {fileCount} ФАЙЛОВ", 35);
                 await CopyWatchdogFilesAsync(installerDir);
                 return;
             }
 
-            // Если локальных файлов нет - пробуем скачать с сервера
-            UpdateStatus("Локальные файлы не найдены, пробуем скачать с сервера...", 22);
+            UpdateStatus("ЗАГРУЗКА С СЕРВЕРА...", 22);
             var downloaded = await TryDownloadFromServerAsync(serverUrl);
-            
-            if (downloaded)
-            {
-                return;
-            }
 
-            // Последняя надежда - диалог выбора папки
-            UpdateStatus("Выберите папку с файлами клиента...", 25);
+            if (downloaded)
+                return;
+
+            UpdateStatus("ВЫБЕРИТЕ ПАПКУ С КЛИЕНТОМ...", 25);
             using var dialog = new FolderBrowserDialog
             {
                 Description = "Выберите папку с файлами AetherShell Client"
             };
-            
+
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 sourceDir = dialog.SelectedPath;
-                
+
                 int fileCount = 0;
                 foreach (var file in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
                 {
                     var relativePath = Path.GetRelativePath(sourceDir, file);
                     var destPath = Path.Combine(_installPath, relativePath);
-                    
+
                     var destDir = Path.GetDirectoryName(destPath);
                     if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
-                    {
                         Directory.CreateDirectory(destDir);
-                    }
-                    
+
                     File.Copy(file, destPath, true);
                     fileCount++;
                 }
-                
-                UpdateStatus($"Скопировано {fileCount} файлов", 35);
+
+                UpdateStatus($"СКОПИРОВАНО {fileCount} ФАЙЛОВ", 35);
                 await CopyWatchdogFilesAsync(installerDir);
             }
             else
@@ -549,27 +758,26 @@ namespace AetherShell.Installer
         {
             var clientZipUrl = serverUrl + "/api/download/client";
             var watchdogZipUrl = serverUrl + "/api/download/watchdog";
-            
+
             var clientZipPath = Path.Combine(Path.GetTempPath(), "AetherShell.Client.zip");
             var watchdogZipPath = Path.Combine(Path.GetTempPath(), "AetherShell.Watchdog.zip");
 
             try
             {
-                // Скачиваем клиент
-                UpdateStatus("Скачивание клиента с сервера...", 20);
-                
+                UpdateStatus("СКАЧИВАНИЕ КЛИЕНТА...", 20);
+
                 using (var response = await _httpClient.GetAsync(clientZipUrl, HttpCompletionOption.ResponseHeadersRead))
                 {
                     if (!response.IsSuccessStatusCode)
                     {
-                        UpdateStatus($"Сервер не вернул клиент (код {(int)response.StatusCode})", 22);
+                        UpdateStatus($"СЕРВЕР НЕ ВЕРНУЛ КЛИЕНТ ({(int)response.StatusCode})", 22);
                         return false;
                     }
 
                     var totalBytes = response.Content.Headers.ContentLength ?? -1;
                     using var contentStream = await response.Content.ReadAsStreamAsync();
                     using var fileStream = new FileStream(clientZipPath, FileMode.Create, FileAccess.Write, FileShare.None);
-                    
+
                     var buffer = new byte[8192];
                     long downloadedBytes = 0;
                     int bytesRead;
@@ -582,16 +790,14 @@ namespace AetherShell.Installer
                         if (totalBytes > 0)
                         {
                             var progress = (int)(20 + (downloadedBytes * 10 / totalBytes));
-                            UpdateStatus($"Скачивание клиента: {downloadedBytes / 1024} / {totalBytes / 1024} KB", progress);
+                            UpdateStatus($"СКАЧИВАНИЕ: {downloadedBytes / 1024} / {totalBytes / 1024} KB", progress);
                         }
                     }
                 }
 
-                // Распаковываем клиент
-                UpdateStatus("Распаковка клиента...", 32);
+                UpdateStatus("РАСПАКОВКА КЛИЕНТА...", 32);
                 if (Directory.Exists(_installPath))
                 {
-                    // Удаляем старые файлы, кроме конфигов
                     foreach (var file in Directory.GetFiles(_installPath))
                     {
                         if (!file.EndsWith(".config", StringComparison.OrdinalIgnoreCase))
@@ -602,8 +808,7 @@ namespace AetherShell.Installer
                 }
                 ZipFile.ExtractToDirectory(clientZipPath, _installPath, true);
 
-                // Пробуем скачать watchdog
-                UpdateStatus("Скачивание службы мониторинга...", 35);
+                UpdateStatus("СКАЧИВАНИЕ СЛУЖБЫ МОНИТОРИНГА...", 35);
                 try
                 {
                     using var watchdogResponse = await _httpClient.GetAsync(watchdogZipUrl);
@@ -613,18 +818,16 @@ namespace AetherShell.Installer
                         using var watchdogFileStream = new FileStream(watchdogZipPath, FileMode.Create);
                         await watchdogStream.CopyToAsync(watchdogFileStream);
                         watchdogFileStream.Close();
-                        
-                        UpdateStatus("Распаковка службы мониторинга...", 38);
+
+                        UpdateStatus("РАСПАКОВКА СЛУЖБЫ...", 38);
                         ZipFile.ExtractToDirectory(watchdogZipPath, _installPath, true);
                     }
                 }
                 catch
                 {
-                    // Watchdog опционален
-                    UpdateStatus("Watchdog недоступен на сервере, пропускаем...", 38);
+                    UpdateStatus("WATCHDOG НЕДОСТУПЕН, ПРОПУСКАЕМ...", 38);
                 }
 
-                // Очистка
                 try { File.Delete(clientZipPath); } catch { }
                 try { File.Delete(watchdogZipPath); } catch { }
 
@@ -632,17 +835,17 @@ namespace AetherShell.Installer
             }
             catch (HttpRequestException ex)
             {
-                UpdateStatus($"Ошибка подключения к серверу: {ex.Message}", 22);
+                UpdateStatus($"ОШИБКА СЕРВЕРА: {ex.Message}", 22);
                 return false;
             }
             catch (TaskCanceledException)
             {
-                UpdateStatus("Таймаут скачивания", 22);
+                UpdateStatus("ТАЙМАУТ СКАЧИВАНИЯ", 22);
                 return false;
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Ошибка скачивания: {ex.Message}", 22);
+                UpdateStatus($"ОШИБКА СКАЧИВАНИЯ: {ex.Message}", 22);
                 return false;
             }
         }
@@ -653,7 +856,7 @@ namespace AetherShell.Installer
             {
                 Path.Combine(installerDir, "WatchdogFiles"),
                 Path.Combine(installerDir, "..", "SpikWatchdog", "bin", "Release", "net8.0-windows"),
-                Path.Combine(installerDir, "..", "SpikWatchdog", "bin", "Debug", "net8.0-windows") // folder name unchanged
+                Path.Combine(installerDir, "..", "SpikWatchdog", "bin", "Debug", "net8.0-windows")
             };
 
             foreach (var src in watchdogSources)
@@ -662,9 +865,7 @@ namespace AetherShell.Installer
                 if (Directory.Exists(fullPath) && (File.Exists(Path.Combine(fullPath, "AetherShell.Watchdog.exe")) || File.Exists(Path.Combine(fullPath, "SpikWatchdog.exe"))))
                 {
                     foreach (var file in Directory.GetFiles(fullPath))
-                    {
                         File.Copy(file, Path.Combine(_installPath, Path.GetFileName(file)), true);
-                    }
                     break;
                 }
             }
@@ -679,7 +880,6 @@ namespace AetherShell.Installer
             if (_clubKey.Length > 0) lines.Add("CLUB_KEY=" + _clubKey);
             if (_clubName.Length > 0) lines.Add("CLUB_NAME=" + _clubName);
 
-            // Пароль выхода из шелла задаётся клубом вручную, поэтому не затираем его.
             var configPath = Path.Combine(_installPath, "server.config");
             var existingExitPassword = ReadExitPassword(configPath);
             if (existingExitPassword != null) lines.Add("EXIT_PASSWORD=" + existingExitPassword);
@@ -711,13 +911,10 @@ namespace AetherShell.Installer
         {
             var watchdogExe = Path.Combine(_installPath, "AetherShell.Watchdog.exe");
             if (!File.Exists(watchdogExe))
-            {
-                return; // Watchdog не найден, пропускаем
-            }
+                return;
 
             var serviceName = "AetherShell.Watchdog";
 
-            // Останавливаем и удаляем если существует
             try
             {
                 var stopInfo = new ProcessStartInfo("sc.exe", $"stop {serviceName}")
@@ -733,21 +930,19 @@ namespace AetherShell.Installer
                     CreateNoWindow = true
                 };
                 Process.Start(deleteInfo)?.WaitForExit();
-                
+
                 System.Threading.Thread.Sleep(2000);
             }
             catch { }
 
-            // Создаём службу
-            var createInfo = new ProcessStartInfo("sc.exe", 
-                $"create {serviceName} binPath= \"{watchdogExe}\" start= auto DisplayName= \"Spik Client Watchdog\"")
+            var createInfo = new ProcessStartInfo("sc.exe",
+                $"create {serviceName} binPath= \"{watchdogExe}\" start= auto DisplayName= \"AetherShell Watchdog\"")
             {
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             Process.Start(createInfo)?.WaitForExit();
 
-            // Настраиваем восстановление при сбое
             var failureInfo = new ProcessStartInfo("sc.exe",
                 $"failure {serviceName} reset= 86400 actions= restart/5000/restart/10000/restart/30000")
             {
@@ -756,7 +951,6 @@ namespace AetherShell.Installer
             };
             Process.Start(failureInfo)?.WaitForExit();
 
-            // Запускаем службу
             var startInfo = new ProcessStartInfo("sc.exe", $"start {serviceName}")
             {
                 UseShellExecute = false,
@@ -767,25 +961,21 @@ namespace AetherShell.Installer
 
         private void DisableExplorerShell()
         {
-            // Определяем путь к клиенту
             var clientExe = Path.Combine(_installPath, "AetherShell.Client.exe");
             if (!File.Exists(clientExe))
-            {
-                clientExe = Path.Combine(_installPath, "clubApp.exe"); // legacy name
-            }
+                clientExe = Path.Combine(_installPath, "clubApp.exe");
 
             if (!File.Exists(clientExe))
             {
-                MessageBox.Show($"Клиент не найден в {_installPath}!\nПроверьте, что файлы скопированы.", 
+                MessageBox.Show($"Клиент не найден в {_installPath}!\nПроверьте, что файлы скопированы.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            UpdateStatus($"Заменяем shell на: {clientExe}", 61);
-            
+            UpdateStatus("ЗАМЕНА SHELL...", 61);
+
             int successCount = 0;
 
-            // 1. Заменяем Shell для ВСЕХ пользователей (HKLM)
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(
@@ -795,25 +985,22 @@ namespace AetherShell.Installer
                     {
                         var originalShell = key.GetValue("Shell")?.ToString();
                         if (!string.IsNullOrEmpty(originalShell) && originalShell != clientExe)
-                        {
                             key.SetValue("Shell_Backup", originalShell, RegistryValueKind.String);
-                        }
                         key.SetValue("Shell", clientExe, RegistryValueKind.String);
                         successCount++;
-                        UpdateStatus("Shell заменён в HKLM", 62);
+                        UpdateStatus("SHELL ЗАМЕНЁН (HKLM)", 62);
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"HKLM Shell: {ex.Message}", 62);
+                UpdateStatus($"HKLM SHELL: {ex.Message}", 62);
             }
 
-            // 2. Также устанавливаем для текущего пользователя (HKCU)
             try
             {
                 using (var key = Registry.CurrentUser.OpenSubKey(
-                    @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true) 
+                    @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", true)
                     ?? Registry.CurrentUser.CreateSubKey(
                     @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
                 {
@@ -821,16 +1008,15 @@ namespace AetherShell.Installer
                     {
                         key.SetValue("Shell", clientExe, RegistryValueKind.String);
                         successCount++;
-                        UpdateStatus("Shell заменён в HKCU", 63);
+                        UpdateStatus("SHELL ЗАМЕНЁН (HKCU)", 63);
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"HKCU Shell: {ex.Message}", 63);
+                UpdateStatus($"HKCU SHELL: {ex.Message}", 63);
             }
 
-            // 3. Убираем explorer из автозапуска Run
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(
@@ -846,34 +1032,26 @@ namespace AetherShell.Installer
             catch { }
 
             if (successCount > 0)
-            {
-                UpdateStatus($"Explorer заменён на AetherShell Client ({successCount} ключей)", 65);
-            }
+                UpdateStatus("EXPLORER ЗАМЕНЁН НА AETHERSHELL", 65);
             else
-            {
-                MessageBox.Show("Не удалось заменить shell!\nЗапустите установщик от имени Администратора.", 
+                MessageBox.Show("Не удалось заменить shell!\nЗапустите установщик от имени Администратора.",
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void SetupAutoStart()
         {
-            // Поддерживаем оба имени файла
             var clientExe = Path.Combine(_installPath, "AetherShell.Client.exe");
             if (!File.Exists(clientExe))
-            {
-                clientExe = Path.Combine(_installPath, "clubApp.exe"); // legacy name
-            }
+                clientExe = Path.Combine(_installPath, "clubApp.exe");
 
             if (!File.Exists(clientExe))
             {
-                UpdateStatus("Клиент не найден для автозапуска!", 72);
+                UpdateStatus("КЛИЕНТ НЕ НАЙДЕН ДЛЯ АВТОЗАПУСКА", 72);
                 return;
             }
 
             int successCount = 0;
 
-            // 1. Добавляем в реестр Run для текущего пользователя
             try
             {
                 using (var key = Registry.CurrentUser.OpenSubKey(
@@ -883,16 +1061,15 @@ namespace AetherShell.Installer
                     {
                         key.SetValue("AetherShell.Client", $"\"{clientExe}\"", RegistryValueKind.String);
                         successCount++;
-                        UpdateStatus("Автозапуск: HKCU Run ✓", 72);
+                        UpdateStatus("АВТОЗАПУСК: HKCU", 72);
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"HKCU Run: {ex.Message}", 72);
+                UpdateStatus($"HKCU RUN: {ex.Message}", 72);
             }
 
-            // 2. Добавляем в реестр Run для всех пользователей
             try
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(
@@ -902,16 +1079,15 @@ namespace AetherShell.Installer
                     {
                         key.SetValue("AetherShell.Client", $"\"{clientExe}\"", RegistryValueKind.String);
                         successCount++;
-                        UpdateStatus("Автозапуск: HKLM Run ✓", 74);
+                        UpdateStatus("АВТОЗАПУСК: HKLM", 74);
                     }
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"HKLM Run: {ex.Message}", 74);
+                UpdateStatus($"HKLM RUN: {ex.Message}", 74);
             }
 
-            // 3. Создаём задачу планировщика
             try
             {
                 var taskName = "AetherShell.ClientAutoStart";
@@ -935,45 +1111,43 @@ namespace AetherShell.Installer
                 };
                 var proc = Process.Start(createInfo);
                 proc?.WaitForExit();
-                
+
                 if (proc?.ExitCode == 0)
                 {
                     successCount++;
-                    UpdateStatus("Автозапуск: Задача планировщика ✓", 76);
+                    UpdateStatus("АВТОЗАПУСК: ПЛАНИРОВЩИК", 76);
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Задача: {ex.Message}", 76);
+                UpdateStatus($"ЗАДАЧА: {ex.Message}", 76);
             }
 
-            // 4. Добавляем в папку автозагрузки
             try
             {
                 var startupFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
                 var shortcutPath = Path.Combine(startupFolder, "AetherShell.Client.lnk");
-                
+
                 CreateShortcut(shortcutPath, clientExe);
-                
+
                 if (File.Exists(shortcutPath))
                 {
                     successCount++;
-                    UpdateStatus("Автозапуск: Ярлык в автозагрузке ✓", 78);
+                    UpdateStatus("АВТОЗАПУСК: ЯРЛЫК", 78);
                 }
             }
             catch (Exception ex)
             {
-                UpdateStatus($"Ярлык: {ex.Message}", 78);
+                UpdateStatus($"ЯРЛЫК: {ex.Message}", 78);
             }
 
-            UpdateStatus($"Настроено {successCount} методов автозапуска", 80);
+            UpdateStatus($"НАСТРОЕНО МЕТОДОВ АВТОЗАПУСКА: {successCount}", 80);
         }
 
         private void CreateShortcut(string shortcutPath, string targetPath)
         {
             try
             {
-                // Используем VBScript для создания ярлыка (работает везде)
                 var vbsPath = Path.Combine(Path.GetTempPath(), "create_shortcut.vbs");
                 var vbsContent = $@"
 Set WshShell = WScript.CreateObject(""WScript.Shell"")
@@ -983,14 +1157,14 @@ shortcut.WorkingDirectory = ""{Path.GetDirectoryName(targetPath)}""
 shortcut.Save
 ";
                 File.WriteAllText(vbsPath, vbsContent);
-                
+
                 var psi = new ProcessStartInfo("cscript.exe", $"//nologo \"{vbsPath}\"")
                 {
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
                 Process.Start(psi)?.WaitForExit();
-                
+
                 try { File.Delete(vbsPath); } catch { }
             }
             catch { }
@@ -1002,7 +1176,7 @@ shortcut.Save
 
             var regPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
             using var key = Registry.LocalMachine.OpenSubKey(regPath, true);
-            
+
             if (key != null)
             {
                 key.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
@@ -1014,9 +1188,35 @@ shortcut.Save
 
         private void UpdateStatus(string message, int progress)
         {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => UpdateStatus(message, progress)));
+                return;
+            }
+
             statusLabel.Text = message;
-            progressBar.Value = progress;
+            _progress = Math.Clamp(progress, 0, 100);
+            Invalidate();
             Application.DoEvents();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_NCHITTEST = 0x84;
+            const int HTCLIENT = 1;
+            const int HTCAPTION = 2;
+            if (m.Msg == WM_NCHITTEST)
+            {
+                base.WndProc(ref m);
+                if ((int)m.Result == HTCLIENT)
+                {
+                    var p = PointToClient(Cursor.Position);
+                    if (p.Y < 48 && !closeButton.Bounds.Contains(p))
+                        m.Result = (IntPtr)HTCAPTION;
+                }
+                return;
+            }
+            base.WndProc(ref m);
         }
     }
 }

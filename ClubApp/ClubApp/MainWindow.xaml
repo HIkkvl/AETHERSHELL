@@ -9,10 +9,11 @@
       <SolidColorBrush x:Key="SecondaryGoldBrush" Color="#E04BC0" />
       <SolidColorBrush x:Key="TextGrayBrush" Color="#B8A8B8" />
       <SolidColorBrush x:Key="TextWhiteBrush" Color="White" />
-      <Geometry x:Key="IconSend">M2.01 21L23 12 2.01 3 2 10l15 2-15 2z</Geometry>
+      <Geometry x:Key="IconSend">M2.01,21 L23,12 L2.01,3 L2,10 L17,12 L2,14 Z</Geometry>
       <Geometry x:Key="IconClose">M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z</Geometry>
       <Geometry x:Key="IconLock">M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z</Geometry>
-      <Geometry x:Key="IconExit">M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z</Geometry>
+      <Geometry x:Key="IconExit">M12.75,31.5 H7.083 C6.332,31.5 5.611,31.184 5.08,30.621 C4.549,30.059 4.25,29.296 4.25,28.5 V7.5 C4.25,6.704 4.549,5.941 5.08,5.379 C5.611,4.816 6.332,4.5 7.083,4.5 H12.75 M22.667,10.5 L29.75,18 L22.667,25.5 M29.75,18 H12.75</Geometry>
+      <Geometry x:Key="IconSwitchPc">M10.666,28 H21.333 M16,22.667 V28 M5.333,4 H26.666 C28.139,4 29.333,5.194 29.333,6.667 V20 C29.333,21.473 28.139,22.667 26.666,22.667 H5.333 C3.86,22.667 2.666,21.473 2.666,20 V6.667 C2.666,5.194 3.86,4 5.333,4 Z</Geometry>
       <Style x:Key="ChatAnimatedButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="#00FFFFFF" />
         <Setter Property="FrameworkElement.Cursor" Value="Hand" />
@@ -98,18 +99,22 @@
       </Style>
       <Style x:Key="ModalButton" TargetType="{x:Type Button}">
         <Setter Property="Height" Value="40" />
-        <Setter Property="Background" Value="{StaticResource AccentGoldBrush}" />
-        <Setter Property="Foreground" Value="#FF000000" />
-        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type Button}">
-              <Border Background="{TemplateBinding Control.Background}" CornerRadius="10">
+              <Border x:Name="Bg" Background="#FC5ED8" CornerRadius="8" Padding="16,0">
+                <Border.Effect>
+                  <DropShadowEffect Color="#FB5ED8" BlurRadius="10" ShadowDepth="0" Opacity="0.4"/>
+                </Border.Effect>
                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter Property="UIElement.Opacity" Value="0.8" />
+                  <Setter TargetName="Bg" Property="UIElement.Opacity" Value="0.92" />
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -117,19 +122,18 @@
         </Setter>
       </Style>
       <Style x:Key="ModalButtonSecondary" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="#00FFFFFF" />
-        <Setter Property="Foreground" Value="#FFFFFFFF" />
-        <Setter Property="BorderBrush" Value="#FF808080" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FontSize" Value="13" />
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type Button}">
-              <Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" CornerRadius="10">
+              <Border x:Name="Bg" Background="#14FFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" CornerRadius="8" Padding="16,0">
                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter Property="Background" Value="#33FFFFFF" />
+                  <Setter TargetName="Bg" Property="Background" Value="#28FFFFFF" />
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -153,22 +157,32 @@
         </Setter>
       </Style>
       <Style x:Key="ShellIconButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="#00FFFFFF" />
-        <Setter Property="Width" Value="60" />
-        <Setter Property="Height" Value="60" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
         <Setter Property="FrameworkElement.Cursor" Value="Hand" />
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type Button}">
-              <Grid Background="#00FFFFFF">
-                <Path Name="IconPath" Fill="#555555" Stretch="Uniform" Margin="10" Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+              <Grid Background="Transparent">
+                <Path Name="IconPath"
+                      Data="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                      Fill="Transparent"
+                      Stroke="#F19EDC"
+                      StrokeThickness="2.4"
+                      StrokeStartLineCap="Round"
+                      StrokeEndLineCap="Round"
+                      StrokeLineJoin="Round"
+                      Stretch="Uniform"
+                      Width="22" Height="22"
+                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter TargetName="IconPath" Property="Shape.Fill" Value="{StaticResource AccentGoldBrush}" />
+                  <Setter TargetName="IconPath" Property="Stroke" Value="#FF5ED7" />
                   <Setter TargetName="IconPath" Property="UIElement.Effect">
                     <Setter.Value>
-                      <DropShadowEffect Color="#FF5ED7" BlurRadius="10" ShadowDepth="0" />
+                      <DropShadowEffect Color="#F19EDC" BlurRadius="10" ShadowDepth="0" Opacity="0.7"/>
                     </Setter.Value>
                   </Setter>
                 </Trigger>
@@ -231,16 +245,53 @@
         </Setter>
       </Style>
       <Style x:Key="InputBorderStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background" Value="#241820" />
-        <Setter Property="Border.CornerRadius" Value="12" />
-        <Setter Property="Height" Value="58" />
-        <Setter Property="Margin" Value="0,0,0,12" />
-        <Setter Property="BorderBrush" Value="#33FFFFFF" />
+        <Setter Property="Background" Value="#0AFFFFFF" />
+        <Setter Property="Border.CornerRadius" Value="8" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="BorderBrush" Value="#1FFFFFFF" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16,12" />
       </Style>
-      <Style x:Key="OldActionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryPinkButtonStyle}">
-        <Setter Property="Height" Value="52" />
-        <Setter Property="Margin" Value="0,8,0,0" />
+      <Style x:Key="AuthFieldLabelStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="#A299B8" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+      </Style>
+      <Style x:Key="OldActionButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Button}">
+              <Border x:Name="Bd" CornerRadius="8" Padding="24,12">
+                <Border.Background>
+                  <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                    <GradientStop Color="#FF375F" Offset="0"/>
+                    <GradientStop Color="#BF5AF2" Offset="1"/>
+                  </LinearGradientBrush>
+                </Border.Background>
+                <Border.Effect>
+                  <DropShadowEffect Color="#BF5AF2" BlurRadius="16" ShadowDepth="0" Opacity="0.55"/>
+                </Border.Effect>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                  <Setter TargetName="Bd" Property="Opacity" Value="0.92"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="Bd" Property="Opacity" Value="0.82"/>
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
       </Style>
       <Style x:Key="NeonLineStyle" TargetType="{x:Type Path}">
         <Setter Property="StrokeThickness" Value="3" />
@@ -260,152 +311,633 @@
       </LinearGradientBrush>
     </ResourceDictionary>
   </Window.Resources>
-  <Grid Name="RootShellGrid" Background="{StaticResource AppBackgroundBrush}">
+  <Grid Name="RootShellGrid">
+    <Grid.Background>
+      <LinearGradientBrush StartPoint="0.15,0" EndPoint="0.85,1">
+        <GradientStop Color="#040208" Offset="0"/>
+        <GradientStop Color="#0D0518" Offset="0.5"/>
+        <GradientStop Color="#1E0933" Offset="1"/>
+      </LinearGradientBrush>
+    </Grid.Background>
+    <!-- Ambient blobs (same motion as auth) -->
+    <Canvas Name="SessionAmbientLayer" ClipToBounds="True" IsHitTestVisible="False"
+            CacheMode="BitmapCache">
+      <Ellipse Name="SessionBlob1" Width="820" Height="820" Opacity="0.55"
+               Canvas.Left="-180" Canvas.Top="-220">
+        <Ellipse.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform x:Name="SessionBlob1Scale" ScaleX="1" ScaleY="1" CenterX="410" CenterY="410"/>
+            <TranslateTransform x:Name="SessionBlob1Move"/>
+          </TransformGroup>
+        </Ellipse.RenderTransform>
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#99BF5AF2" Offset="0"/>
+            <GradientStop Color="#44BF5AF2" Offset="0.45"/>
+            <GradientStop Color="#00BF5AF2" Offset="1"/>
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Ellipse Name="SessionBlob2" Width="640" Height="640" Opacity="0.5"
+               Canvas.Left="780" Canvas.Top="280">
+        <Ellipse.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform x:Name="SessionBlob2Scale" ScaleX="1" ScaleY="1" CenterX="320" CenterY="320"/>
+            <TranslateTransform x:Name="SessionBlob2Move"/>
+          </TransformGroup>
+        </Ellipse.RenderTransform>
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#AAFF375F" Offset="0"/>
+            <GradientStop Color="#55FF375F" Offset="0.4"/>
+            <GradientStop Color="#00FF375F" Offset="1"/>
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Ellipse Name="SessionBlob3" Width="700" Height="700" Opacity="0.35"
+               Canvas.Left="-120" Canvas.Top="420">
+        <Ellipse.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform x:Name="SessionBlob3Scale" ScaleX="1" ScaleY="1" CenterX="350" CenterY="350"/>
+            <TranslateTransform x:Name="SessionBlob3Move"/>
+          </TransformGroup>
+        </Ellipse.RenderTransform>
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#778B5CF6" Offset="0"/>
+            <GradientStop Color="#338B5CF6" Offset="0.5"/>
+            <GradientStop Color="#008B5CF6" Offset="1"/>
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Ellipse Name="SessionBlob4" Width="520" Height="520" Opacity="0.4"
+               Canvas.Left="980" Canvas.Top="-80">
+        <Ellipse.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform x:Name="SessionBlob4Scale" ScaleX="1" ScaleY="1" CenterX="260" CenterY="260"/>
+            <TranslateTransform x:Name="SessionBlob4Move"/>
+          </TransformGroup>
+        </Ellipse.RenderTransform>
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#77FF5ED7" Offset="0"/>
+            <GradientStop Color="#33E04BC0" Offset="0.45"/>
+            <GradientStop Color="#00FF5ED7" Offset="1"/>
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Ellipse Name="SessionBlob5" Width="480" Height="480" Opacity="0.28"
+               Canvas.Left="520" Canvas.Top="520">
+        <Ellipse.RenderTransform>
+          <TransformGroup>
+            <ScaleTransform x:Name="SessionBlob5Scale" ScaleX="1" ScaleY="1" CenterX="240" CenterY="240"/>
+            <TranslateTransform x:Name="SessionBlob5Move"/>
+          </TransformGroup>
+        </Ellipse.RenderTransform>
+        <Ellipse.Fill>
+          <RadialGradientBrush>
+            <GradientStop Color="#664FC3F7" Offset="0"/>
+            <GradientStop Color="#224FC3F7" Offset="0.5"/>
+            <GradientStop Color="#004FC3F7" Offset="1"/>
+          </RadialGradientBrush>
+        </Ellipse.Fill>
+      </Ellipse>
+      <Canvas.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+          <BeginStoryboard Name="SessionAmbientStoryboard">
+            <Storyboard RepeatBehavior="Forever">
+              <DoubleAnimation Storyboard.TargetName="SessionBlob1Move" Storyboard.TargetProperty="X"
+                               From="-40" To="220" Duration="0:0:28" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob1Move" Storyboard.TargetProperty="Y"
+                               From="30" To="180" Duration="0:0:22" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob1Scale" Storyboard.TargetProperty="ScaleX"
+                               From="0.92" To="1.18" Duration="0:0:18" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob1Scale" Storyboard.TargetProperty="ScaleY"
+                               From="0.92" To="1.18" Duration="0:0:18" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob1" Storyboard.TargetProperty="Opacity"
+                               From="0.35" To="0.65" Duration="0:0:14" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob2Move" Storyboard.TargetProperty="X"
+                               From="60" To="-260" Duration="0:0:32" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob2Move" Storyboard.TargetProperty="Y"
+                               From="-40" To="160" Duration="0:0:24" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob2Scale" Storyboard.TargetProperty="ScaleX"
+                               From="1.05" To="0.85" Duration="0:0:16" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob2Scale" Storyboard.TargetProperty="ScaleY"
+                               From="1.05" To="0.85" Duration="0:0:16" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob2" Storyboard.TargetProperty="Opacity"
+                               From="0.3" To="0.62" Duration="0:0:12" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob3Move" Storyboard.TargetProperty="X"
+                               From="0" To="280" Duration="0:0:26" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob3Move" Storyboard.TargetProperty="Y"
+                               From="80" To="-140" Duration="0:0:30" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob3Scale" Storyboard.TargetProperty="ScaleX"
+                               From="0.88" To="1.22" Duration="0:0:20" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob3Scale" Storyboard.TargetProperty="ScaleY"
+                               From="0.88" To="1.22" Duration="0:0:20" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob3" Storyboard.TargetProperty="Opacity"
+                               From="0.22" To="0.48" Duration="0:0:15" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob4Move" Storyboard.TargetProperty="X"
+                               From="-120" To="80" Duration="0:0:21" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob4Move" Storyboard.TargetProperty="Y"
+                               From="0" To="220" Duration="0:0:27" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob4Scale" Storyboard.TargetProperty="ScaleX"
+                               From="1.1" To="0.9" Duration="0:0:17" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob4Scale" Storyboard.TargetProperty="ScaleY"
+                               From="1.1" To="0.9" Duration="0:0:17" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob4" Storyboard.TargetProperty="Opacity"
+                               From="0.25" To="0.55" Duration="0:0:13" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob5Move" Storyboard.TargetProperty="X"
+                               From="100" To="-180" Duration="0:0:29" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob5Move" Storyboard.TargetProperty="Y"
+                               From="-60" To="100" Duration="0:0:19" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob5Scale" Storyboard.TargetProperty="ScaleX"
+                               From="0.95" To="1.25" Duration="0:0:23" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob5Scale" Storyboard.TargetProperty="ScaleY"
+                               From="0.95" To="1.25" Duration="0:0:23" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+              <DoubleAnimation Storyboard.TargetName="SessionBlob5" Storyboard.TargetProperty="Opacity"
+                               From="0.18" To="0.42" Duration="0:0:11" AutoReverse="True">
+                <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+              </DoubleAnimation>
+            </Storyboard>
+          </BeginStoryboard>
+        </EventTrigger>
+      </Canvas.Triggers>
+    </Canvas>
+    <Grid>
     <Grid.ColumnDefinitions>
+      <ColumnDefinition x:Name="CategoryCol" Width="240" />
       <ColumnDefinition Width="*" />
-      <ColumnDefinition Width="320" />
+      <ColumnDefinition Width="260" />
     </Grid.ColumnDefinitions>
     <Grid.RowDefinitions>
-      <RowDefinition Height="72" />
+      <RowDefinition Height="69" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
-    <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#CC241820" BorderBrush="#4FFFFFFF" BorderThickness="0,0,0,1" Panel.ZIndex="100" Padding="28,0">
-      <Grid>
+    <Border Grid.Row="0" Grid.ColumnSpan="3" Name="ShellTopBar"
+            Background="#0AFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="0,0,0,1"
+            Panel.ZIndex="100">
+      <Grid Margin="0,0,28,0">
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-          <Button Background="#00FFFFFF" BorderThickness="0" Cursor="Hand" Padding="0" Margin="0,0,28,0" ToolTip="Приложения" Click="Nav_Apps_Click">
-            <Image Source="pack://application:,,,/Images/logo_menu.png" Height="36" RenderOptions.BitmapScalingMode="HighQuality" />
+          <Button Background="Transparent" BorderThickness="0" Cursor="Hand" Padding="0" Margin="79,0,48,0"
+                  VerticalAlignment="Center" ToolTip="Главная" Click="Nav_Apps_Click">
+            <Image Source="pack://application:,,,/Images/logo_menu.png" Height="52" Width="52"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
           </Button>
-          <Button Name="BtnNavApps" Content="Приложения" Style="{StaticResource ShellNavTabActiveStyle}" Click="Nav_Apps_Click" />
           <Button Name="BtnNavGames" Content="Игры" Style="{StaticResource ShellNavTabStyle}" Click="Nav_Games_Click" />
+          <Button Name="BtnNavApps" Content="Приложения" Style="{StaticResource ShellNavTabActiveStyle}" Click="Nav_Apps_Click" />
           <Button Name="BtnNavTariffs" Content="Тарифы" Style="{StaticResource ShellNavTabStyle}" Click="Nav_Tariffs_Click" />
           <Button Name="BtnNavFood" Content="Еда" Style="{StaticResource ShellNavTabStyle}" Click="Nav_Food_Click" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-          <Button Style="{StaticResource ShellIconButtonStyle}" Tag="{StaticResource IconChat}" ToolTip="Чат с админом" Margin="0,0,8,0" Click="BtnToggleChat_Click" />
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0,16,0">
-            <Ellipse Width="8" Height="8" Fill="#FF5ED7" Margin="0,0,8,0" />
-            <TextBlock Name="TopPcZoneText" Text="pc" Foreground="#C8C8D0" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <Border Name="HighAccessBadge" Visibility="Collapsed" Background="#555558" CornerRadius="8"
+                  Padding="10,4" Margin="0,0,12,0" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="Высокий доступ" Foreground="#E8E8EA" FontSize="12" FontWeight="SemiBold"
+                         VerticalAlignment="Center" Margin="0,0,10,0"/>
+              <Button Content="Выйти из режима" FontSize="11" Padding="8,2" Margin="0,0,6,0" Cursor="Hand"
+                      Background="#333" Foreground="White" BorderThickness="0" Click="BtnLeaveHighAccess_Click"/>
+              <Button Content="Закрыть шелл" FontSize="11" Padding="8,2" Cursor="Hand"
+                      Background="#666" Foreground="White" BorderThickness="0" Click="BtnCloseShellHighAccess_Click"/>
+            </StackPanel>
+          </Border>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+            <Ellipse Name="TopPcZoneDot" Width="8" Height="8" Fill="#3DDC97" Margin="0,0,8,0">
+              <Ellipse.Effect>
+                <DropShadowEffect Color="#3DDC97" BlurRadius="8" ShadowDepth="0" Opacity="0.9"/>
+              </Ellipse.Effect>
+            </Ellipse>
+            <TextBlock Name="TopPcZoneText" Text="PC - 1" Foreground="White" FontSize="11"
+                       FontWeight="SemiBold" VerticalAlignment="Center" />
           </StackPanel>
-          <Button Style="{StaticResource ShellIconButtonStyle}" Tag="{StaticResource IconLock}" ToolTip="Выйти / блокировка" Margin="0,0,4,0" Click="BtnLogout_Click" />
-          <Button Style="{StaticResource ShellIconButtonStyle}" Tag="{StaticResource IconExit}" ToolTip="Выход" Click="BtnLogout_Click" />
+          <Button Style="{StaticResource ShellIconButtonStyle}" Tag="{StaticResource IconSwitchPc}"
+                  ToolTip="Пересесть на другой ПК" Margin="0,0,2,0" Width="36" Height="36"
+                  Click="BtnOpenClubMap_Click" />
+          <Button Style="{StaticResource ShellIconButtonStyle}" Tag="{StaticResource IconExit}"
+                  ToolTip="Выход" Width="36" Height="36" Click="BtnLogout_Click" />
         </StackPanel>
       </Grid>
     </Border>
-    <Frame Name="MainFrame" Grid.Row="1" Grid.Column="0" NavigationUIVisibility="Hidden" Margin="16,12,8,24" />
-    <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="0,12,20,24">
-      <StackPanel>
-        <Border Margin="0,0,0,12" Background="#3C2F3D" CornerRadius="18" Padding="18" BorderThickness="1.5">
-          <Border.BorderBrush>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-              <GradientStop Color="#FF5ED7" Offset="0" />
-              <GradientStop Color="#8B3A7A" Offset="0.55" />
-              <GradientStop Color="#FF5ED7" Offset="1" />
-            </LinearGradientBrush>
-          </Border.BorderBrush>
-          <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,14">
-              <Grid Width="44" Height="44" Margin="0,0,10,0">
-                <Border CornerRadius="8" Background="#3C2F3D" ClipToBounds="True">
-                  <Grid>
-                    <TextBlock Name="SidebarAvatar" Text="?" Foreground="#FFFFFFFF" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <Image Name="SidebarAvatarImage" Stretch="UniformToFill" Visibility="Collapsed" />
-                  </Grid>
-                </Border>
-                <Button Name="BtnEditAvatar" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-6,-6,0" Cursor="Hand" ToolTip="Сменить аватар" Background="#FF5ED7" BorderThickness="0" Padding="0" Click="BtnEditAvatar_Click">
-                  <Button.Template>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                      <Border Background="{TemplateBinding Control.Background}" CornerRadius="10" Width="20" Height="20">
-                        <TextBlock Text="✎" Foreground="#FFFFFFFF" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0" />
-                      </Border>
-                    </ControlTemplate>
-                  </Button.Template>
-                </Button>
+
+    <!-- Full-height category rail (Figma sidebar-nav) -->
+    <Border Name="ShellCategoryRail" Grid.Row="1" Grid.Column="0"
+            Background="#0AFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="0,0,1,0"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="24">
+      <DockPanel LastChildFill="True">
+        <TextBlock Name="ShellCategorySectionTitle" DockPanel.Dock="Top"
+                   Text="ПРИЛОЖЕНИЯ" Foreground="#605678" FontSize="10"
+                   FontWeight="SemiBold" Margin="0,0,0,12"/>
+        <Border DockPanel.Dock="Top"
+                Background="#0AFFFFFF" BorderBrush="#3DBF5AF2" BorderThickness="1"
+                CornerRadius="8" Padding="16,12" Margin="0,0,0,8"
+                HorizontalAlignment="Stretch">
+          <TextBlock Text="Категории" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+        </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalAlignment="Stretch" ClipToBounds="False">
+          <StackPanel x:Name="ShellCategoriesPanel"/>
+        </ScrollViewer>
+      </DockPanel>
+    </Border>
+
+    <Frame Name="MainFrame" Grid.Row="1" Grid.Column="1"
+           NavigationUIVisibility="Hidden" Margin="0" Background="Transparent">
+      <Frame.Template>
+        <ControlTemplate TargetType="Frame">
+          <ContentPresenter Content="{TemplateBinding Content}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"/>
+        </ControlTemplate>
+      </Frame.Template>
+    </Frame>
+
+    <!-- Right floating cards -->
+    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,28,14,88" Width="240" HorizontalAlignment="Right">
+      <Border Background="#66000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+              CornerRadius="10" Padding="16" Margin="0,0,0,14">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+          <Grid Width="48" Height="48" Margin="0,0,12,0" VerticalAlignment="Top">
+            <Border CornerRadius="24" BorderBrush="#BF5AF2" BorderThickness="1.5" ClipToBounds="True" Background="#14FFFFFF">
+              <Grid>
+                <TextBlock Name="SidebarAvatar" Text="?" Foreground="White" FontWeight="Bold"
+                           FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Image Name="SidebarAvatarImage" Stretch="UniformToFill" Visibility="Collapsed" />
               </Grid>
-              <TextBlock Name="SidebarUsername" Text="..." Foreground="#C8C8D0" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" />
-            </StackPanel>
-            <TextBlock Name="SidebarSessionLabel" Text="Активна - осталось" Foreground="#FFFFFFFF" FontSize="13" HorizontalAlignment="Center" />
-            <TextBlock Name="SidebarTimer" Text="00:00:00" Foreground="#FFFFFFFF" FontSize="34" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,6,0,8" />
-            <TextBlock Name="SidebarTariffHint" Text="Тариф: —" Foreground="#B8A8B8" FontSize="12" HorizontalAlignment="Center" />
-          </StackPanel>
-        </Border>
-        <TextBlock Name="DiscountText" Text="0%" Visibility="Collapsed" />
-        <Border Style="{StaticResource GlassPanelStyle}" Margin="0,0,0,12">
-          <StackPanel>
-            <TextBlock Text="Баланс:" Foreground="#B8A8B8" FontSize="12" />
-            <TextBlock Name="SidebarBalance" Text="0 ₸" Foreground="#FFFFFFFF" FontSize="28" FontWeight="Bold" Margin="0,6,0,14" />
-            <TextBlock Text="Пополнить:" Foreground="#B8A8B8" FontSize="12" Margin="0,0,0,8" />
-            <Border Background="#241820" CornerRadius="10" BorderBrush="#33FFFFFF" BorderThickness="1" Padding="12,10" Margin="0,0,0,12">
-              <TextBox Name="TopUpAmountBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" FontSize="14" CaretBrush="#FFFFFFFF" Text="" />
             </Border>
-            <TextBlock IsHitTestVisible="False" Text="Введите сумму" Foreground="#555" FontSize="13" Margin="14,-44,0,28">
-              <FrameworkElement.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                  <Setter Property="Visibility" Value="Collapsed" />
-                  <Style.Triggers>
-                    <DataTrigger Value="" Binding="{Binding Text, ElementName=TopUpAmountBox}">
-                      <Setter Property="Visibility" Value="Visible" />
-                    </DataTrigger>
-                  </Style.Triggers>
-                </Style>
-              </FrameworkElement.Style>
-            </TextBlock>
-            <Button Content="Пополнить" Style="{StaticResource PrimaryPinkButtonStyle}" Click="BtnTopUp_Click" />
-          </StackPanel>
-        </Border>
-        <ProgressBar Name="LoyaltyProgress" Height="3" Margin="4,0,4,12" Background="#3C2F3D" Foreground="#FF5ED7" BorderThickness="0" Visibility="Collapsed" />
-        <Border Name="BannerContainer" Visibility="Collapsed" Margin="0,0,0,12" Height="220" CornerRadius="16" BorderBrush="#33FFFFFF" BorderThickness="1">
-          <Grid>
-            <UIElement.OpacityMask>
-              <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
-                <VisualBrush.Visual>
-                  <Border Background="#FF000000" CornerRadius="15.5" Width="{Binding ActualWidth, ElementName=BannerContainer}" Height="{Binding ActualHeight, ElementName=BannerContainer}" />
-                </VisualBrush.Visual>
-              </VisualBrush>
-            </UIElement.OpacityMask>
-            <Grid ClipToBounds="True">
-              <Canvas Name="BannerCanvas">
-                <Image Name="CurrentBannerImg" Width="270" Height="218" Stretch="UniformToFill" Canvas.Left="0" />
-                <Image Name="NextBannerImg" Width="270" Height="218" Stretch="UniformToFill" Canvas.Left="0" />
-              </Canvas>
-              <Button Background="#00FFFFFF" BorderThickness="0" Cursor="Hand" Width="{Binding ActualWidth, ElementName=BannerContainer}" Height="{Binding ActualHeight, ElementName=BannerContainer}" Click="PromoBanner_Click">
-                <Button.Template>
-                  <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="#00FFFFFF" />
-                  </ControlTemplate>
-                </Button.Template>
-              </Button>
-            </Grid>
+            <Button Name="BtnEditAvatar" Width="18" Height="18" HorizontalAlignment="Right"
+                    VerticalAlignment="Top" Margin="0,-4,-4,0" Cursor="Hand" ToolTip="Сменить аватар"
+                    Background="#BF5AF2" BorderThickness="0" Padding="0" Click="BtnEditAvatar_Click">
+              <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                  <Border Background="{TemplateBinding Control.Background}" CornerRadius="9" Width="18" Height="18">
+                    <TextBlock Text="✎" Foreground="White" FontSize="10"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  </Border>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
           </Grid>
-        </Border>
-      </StackPanel>
-    </ScrollViewer>
-    <Grid Name="LockedScreen" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Visible" Panel.ZIndex="500" Background="#FF000000">
-      <Grid Name="AuthContentLayer" Background="{StaticResource AppBackgroundBrush}">
-        <!-- Soft ambient glow -->
-        <Ellipse Width="720" Height="720" HorizontalAlignment="Center" VerticalAlignment="Center"
-                 Margin="0,-120,0,0" IsHitTestVisible="False" Opacity="0.35">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Color="#66FF5ED7" Offset="0"/>
-              <GradientStop Color="#00FF5ED7" Offset="1"/>
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-          <Ellipse.Effect>
-            <BlurEffect Radius="80"/>
-          </Ellipse.Effect>
-        </Ellipse>
-        <Ellipse Width="480" Height="480" HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                 Margin="-120,0,0,-80" IsHitTestVisible="False" Opacity="0.22">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Color="#558B3A7A" Offset="0"/>
-              <GradientStop Color="#008B3A7A" Offset="1"/>
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-          <Ellipse.Effect>
-            <BlurEffect Radius="60"/>
-          </Ellipse.Effect>
-        </Ellipse>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock Name="SidebarUsername" Text="..." Foreground="White" FontSize="14"
+                       FontWeight="SemiBold"/>
+            <TextBlock Name="SidebarSessionLabel" Text="Активна - осталось" Foreground="#A299B8"
+                       FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+            <TextBlock Name="SidebarTimer" Text="00:00:00" Foreground="#A299B8" FontSize="12"
+                       Margin="0,4,0,0"/>
+            <TextBlock Name="SidebarTariffHint" Text="Тариф: —" Foreground="#A299B8"
+                       FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <TextBlock Name="DiscountText" Text="0%" Visibility="Collapsed" />
+
+      <Border Background="#66000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+              CornerRadius="10" Padding="16" Margin="0,0,0,14">
+        <StackPanel>
+          <TextBlock Text="Баланс" Foreground="White" FontSize="13" FontWeight="Light"/>
+          <TextBlock Name="SidebarBalance" Text="0 ₸" Foreground="#FF5ED7" FontSize="26"
+                     Margin="0,8,0,12"/>
+          <TextBlock Text="Пополнить" Foreground="White" FontSize="13" FontWeight="Light" Margin="0,0,0,10"/>
+          <Border Background="#4D000000" CornerRadius="8" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                  Height="36" Padding="14,0" Margin="0,0,0,12">
+            <Grid>
+              <TextBox Name="TopUpAmountBox" Background="Transparent" BorderThickness="0"
+                       Foreground="White" FontSize="13" VerticalContentAlignment="Center"
+                       CaretBrush="White" Text=""/>
+              <TextBlock IsHitTestVisible="False" Text="Введите сумму" Foreground="#A299B8"
+                         FontSize="12" VerticalAlignment="Center">
+                <TextBlock.Style>
+                  <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Text, ElementName=TopUpAmountBox}" Value="">
+                        <Setter Property="Visibility" Value="Visible"/>
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </TextBlock.Style>
+              </TextBlock>
+            </Grid>
+          </Border>
+          <Button Content="Пополнить" Style="{StaticResource PrimaryPinkButtonStyle}"
+                  HorizontalAlignment="Center" MinWidth="96" Height="28" FontSize="12"
+                  Click="BtnTopUp_Click"/>
+        </StackPanel>
+      </Border>
+
+      <ProgressBar Name="LoyaltyProgress" Height="3" Margin="0,0,0,12" Background="#1A1224"
+                   Foreground="#BF5AF2" BorderThickness="0" Visibility="Collapsed"/>
+
+      <Border Name="BannerContainer" Visibility="Collapsed" Margin="0,0,0,12" Height="180"
+              CornerRadius="10" BorderBrush="#1FFFFFFF" BorderThickness="1">
+        <Grid>
+          <UIElement.OpacityMask>
+            <VisualBrush Stretch="None" AlignmentX="Left" AlignmentY="Top">
+              <VisualBrush.Visual>
+                <Border Background="#FF000000" CornerRadius="9.5"
+                        Width="{Binding ActualWidth, ElementName=BannerContainer}"
+                        Height="{Binding ActualHeight, ElementName=BannerContainer}"/>
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </UIElement.OpacityMask>
+          <Grid ClipToBounds="True">
+            <Canvas Name="BannerCanvas">
+              <Image Name="CurrentBannerImg" Width="240" Height="178" Stretch="UniformToFill" Canvas.Left="0"/>
+              <Image Name="NextBannerImg" Width="240" Height="178" Stretch="UniformToFill" Canvas.Left="0"/>
+            </Canvas>
+            <Button Background="Transparent" BorderThickness="0" Cursor="Hand"
+                    Width="{Binding ActualWidth, ElementName=BannerContainer}"
+                    Height="{Binding ActualHeight, ElementName=BannerContainer}" Click="PromoBanner_Click">
+              <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                  <Border Background="Transparent"/>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+          </Grid>
+        </Grid>
+      </Border>
+    </StackPanel>
+
+    <!-- Admin chat button -->
+    <Button Name="BtnAdminChat" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+            Margin="0,0,14,24" Width="240" Cursor="Hand" Click="BtnToggleChat_Click" ToolTip="Чат с админом"
+            Background="Transparent" BorderThickness="0" Padding="0">
+      <Button.Template>
+        <ControlTemplate TargetType="Button">
+          <Border Background="#4D000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                  CornerRadius="10" Padding="14,12" Width="240">
+            <StackPanel Orientation="Horizontal">
+              <Ellipse Width="10" Height="10" Fill="#3DDC97" Margin="0,0,12,0" VerticalAlignment="Center">
+                <Ellipse.Effect>
+                  <DropShadowEffect Color="#3DDC97" BlurRadius="8" ShadowDepth="0" Opacity="0.9"/>
+                </Ellipse.Effect>
+              </Ellipse>
+              <StackPanel>
+                <TextBlock Text="Админ в сети" Foreground="White" FontSize="13" FontWeight="SemiBold"/>
+                <TextBlock Text="Написать админу" Foreground="#A299B8" FontSize="12" Margin="0,3,0,0"/>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </ControlTemplate>
+      </Button.Template>
+    </Button>
+    </Grid>
+    <Grid Name="LockedScreen" Visibility="Visible" Panel.ZIndex="500" Background="#FF000000">
+      <Grid Name="AuthContentLayer">
+        <Grid.Background>
+          <LinearGradientBrush StartPoint="0.2,0" EndPoint="0.8,1">
+            <GradientStop Color="#050208" Offset="0"/>
+            <GradientStop Color="#0C0516" Offset="0.5"/>
+            <GradientStop Color="#160820" Offset="1"/>
+          </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Ambient blobs (Yandex Music–style) -->
+        <Canvas Name="AuthAmbientLayer" ClipToBounds="True" IsHitTestVisible="False"
+                CacheMode="BitmapCache">
+          <Ellipse Name="AuthBlob1" Width="820" Height="820" Opacity="0.55"
+                   Canvas.Left="-180" Canvas.Top="-220">
+            <Ellipse.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform x:Name="AuthBlob1Scale" ScaleX="1" ScaleY="1" CenterX="410" CenterY="410"/>
+                <TranslateTransform x:Name="AuthBlob1Move"/>
+              </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Fill>
+              <RadialGradientBrush>
+                <GradientStop Color="#99BF5AF2" Offset="0"/>
+                <GradientStop Color="#44BF5AF2" Offset="0.45"/>
+                <GradientStop Color="#00BF5AF2" Offset="1"/>
+              </RadialGradientBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+          <Ellipse Name="AuthBlob2" Width="640" Height="640" Opacity="0.5"
+                   Canvas.Left="780" Canvas.Top="280">
+            <Ellipse.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform x:Name="AuthBlob2Scale" ScaleX="1" ScaleY="1" CenterX="320" CenterY="320"/>
+                <TranslateTransform x:Name="AuthBlob2Move"/>
+              </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Fill>
+              <RadialGradientBrush>
+                <GradientStop Color="#AAFF375F" Offset="0"/>
+                <GradientStop Color="#55FF375F" Offset="0.4"/>
+                <GradientStop Color="#00FF375F" Offset="1"/>
+              </RadialGradientBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+          <Ellipse Name="AuthBlob3" Width="700" Height="700" Opacity="0.35"
+                   Canvas.Left="-120" Canvas.Top="420">
+            <Ellipse.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform x:Name="AuthBlob3Scale" ScaleX="1" ScaleY="1" CenterX="350" CenterY="350"/>
+                <TranslateTransform x:Name="AuthBlob3Move"/>
+              </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Fill>
+              <RadialGradientBrush>
+                <GradientStop Color="#778B5CF6" Offset="0"/>
+                <GradientStop Color="#338B5CF6" Offset="0.5"/>
+                <GradientStop Color="#008B5CF6" Offset="1"/>
+              </RadialGradientBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+          <Ellipse Name="AuthBlob4" Width="520" Height="520" Opacity="0.4"
+                   Canvas.Left="980" Canvas.Top="-80">
+            <Ellipse.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform x:Name="AuthBlob4Scale" ScaleX="1" ScaleY="1" CenterX="260" CenterY="260"/>
+                <TranslateTransform x:Name="AuthBlob4Move"/>
+              </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Fill>
+              <RadialGradientBrush>
+                <GradientStop Color="#77FF5ED7" Offset="0"/>
+                <GradientStop Color="#33E04BC0" Offset="0.45"/>
+                <GradientStop Color="#00FF5ED7" Offset="1"/>
+              </RadialGradientBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+          <Ellipse Name="AuthBlob5" Width="480" Height="480" Opacity="0.28"
+                   Canvas.Left="520" Canvas.Top="520">
+            <Ellipse.RenderTransform>
+              <TransformGroup>
+                <ScaleTransform x:Name="AuthBlob5Scale" ScaleX="1" ScaleY="1" CenterX="240" CenterY="240"/>
+                <TranslateTransform x:Name="AuthBlob5Move"/>
+              </TransformGroup>
+            </Ellipse.RenderTransform>
+            <Ellipse.Fill>
+              <RadialGradientBrush>
+                <GradientStop Color="#664FC3F7" Offset="0"/>
+                <GradientStop Color="#224FC3F7" Offset="0.5"/>
+                <GradientStop Color="#004FC3F7" Offset="1"/>
+              </RadialGradientBrush>
+            </Ellipse.Fill>
+          </Ellipse>
+          <Canvas.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+              <BeginStoryboard Name="AuthAmbientStoryboard">
+                <Storyboard RepeatBehavior="Forever">
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob1Move" Storyboard.TargetProperty="X"
+                                   From="-40" To="220" Duration="0:0:28" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob1Move" Storyboard.TargetProperty="Y"
+                                   From="30" To="180" Duration="0:0:22" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob1Scale" Storyboard.TargetProperty="ScaleX"
+                                   From="0.92" To="1.18" Duration="0:0:18" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob1Scale" Storyboard.TargetProperty="ScaleY"
+                                   From="0.92" To="1.18" Duration="0:0:18" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob1" Storyboard.TargetProperty="Opacity"
+                                   From="0.35" To="0.65" Duration="0:0:14" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob2Move" Storyboard.TargetProperty="X"
+                                   From="60" To="-260" Duration="0:0:32" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob2Move" Storyboard.TargetProperty="Y"
+                                   From="-40" To="160" Duration="0:0:24" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob2Scale" Storyboard.TargetProperty="ScaleX"
+                                   From="1.05" To="0.85" Duration="0:0:16" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob2Scale" Storyboard.TargetProperty="ScaleY"
+                                   From="1.05" To="0.85" Duration="0:0:16" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob2" Storyboard.TargetProperty="Opacity"
+                                   From="0.3" To="0.62" Duration="0:0:12" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob3Move" Storyboard.TargetProperty="X"
+                                   From="0" To="280" Duration="0:0:26" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob3Move" Storyboard.TargetProperty="Y"
+                                   From="80" To="-140" Duration="0:0:30" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob3Scale" Storyboard.TargetProperty="ScaleX"
+                                   From="0.88" To="1.22" Duration="0:0:20" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob3Scale" Storyboard.TargetProperty="ScaleY"
+                                   From="0.88" To="1.22" Duration="0:0:20" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob3" Storyboard.TargetProperty="Opacity"
+                                   From="0.22" To="0.48" Duration="0:0:15" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob4Move" Storyboard.TargetProperty="X"
+                                   From="-120" To="80" Duration="0:0:21" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob4Move" Storyboard.TargetProperty="Y"
+                                   From="0" To="220" Duration="0:0:27" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob4Scale" Storyboard.TargetProperty="ScaleX"
+                                   From="1.1" To="0.9" Duration="0:0:17" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob4Scale" Storyboard.TargetProperty="ScaleY"
+                                   From="1.1" To="0.9" Duration="0:0:17" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob4" Storyboard.TargetProperty="Opacity"
+                                   From="0.25" To="0.55" Duration="0:0:13" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob5Move" Storyboard.TargetProperty="X"
+                                   From="100" To="-180" Duration="0:0:29" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob5Move" Storyboard.TargetProperty="Y"
+                                   From="-60" To="100" Duration="0:0:19" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob5Scale" Storyboard.TargetProperty="ScaleX"
+                                   From="0.95" To="1.25" Duration="0:0:23" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob5Scale" Storyboard.TargetProperty="ScaleY"
+                                   From="0.95" To="1.25" Duration="0:0:23" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                  <DoubleAnimation Storyboard.TargetName="AuthBlob5" Storyboard.TargetProperty="Opacity"
+                                   From="0.18" To="0.42" Duration="0:0:11" AutoReverse="True">
+                    <DoubleAnimation.EasingFunction><SineEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+                  </DoubleAnimation>
+                </Storyboard>
+              </BeginStoryboard>
+            </EventTrigger>
+          </Canvas.Triggers>
+        </Canvas>
 
         <TextBlock Name="PcNameText" Text="..." FontSize="28" FontWeight="SemiBold"
                    Foreground="#55FFFFFF" HorizontalAlignment="Left" VerticalAlignment="Top"
@@ -414,155 +946,127 @@
                    Foreground="#40FFFFFF" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                    Margin="0,0,40,28"/>
 
-        <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="440"
-                Background="#CC342735" BorderBrush="#4FFFFFFF" BorderThickness="1"
-                CornerRadius="22" Padding="36,32">
+        <!-- Login card -->
+        <Border VerticalAlignment="Center" HorizontalAlignment="Center" Width="420"
+                Background="#0AFFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                CornerRadius="20" Padding="40">
           <Border.Effect>
-            <DropShadowEffect Color="#FF5ED7" BlurRadius="36" ShadowDepth="0" Opacity="0.18"/>
+            <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="0" Opacity="0.45"/>
           </Border.Effect>
           <StackPanel>
-            <Image Source="pack://application:,,,/Images/logo_menu.png" Width="56" Height="56"
-                   HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"
-                   Margin="0,0,0,10"/>
-            <TextBlock Text="AETHERSHELL" Foreground="#FFFFFFFF" FontSize="22" FontWeight="Bold"
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="Вход в сессию" Foreground="#B8A8B8" FontSize="13"
-                       HorizontalAlignment="Center" Margin="0,6,0,22"/>
+            <!-- Brand -->
+            <StackPanel HorizontalAlignment="Center" Margin="0,0,0,32">
+              <Image Source="pack://application:,,,/Images/logo_menu.png" Width="88" Height="88"
+                     HorizontalAlignment="Center" Margin="0,0,0,12"
+                     RenderOptions.BitmapScalingMode="HighQuality">
+                <Image.Effect>
+                  <DropShadowEffect Color="#BF5AF2" BlurRadius="18" ShadowDepth="0" Opacity="0.55"/>
+                </Image.Effect>
+              </Image>
+              <TextBlock Text="AETHERSHELL" Foreground="White" FontSize="28" FontWeight="Bold"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="Вход в сессию" Foreground="#A299B8" FontSize="13" FontWeight="SemiBold"
+                         HorizontalAlignment="Center" Margin="0,8,0,0"/>
+            </StackPanel>
 
             <StackPanel Name="LoginPanel" Visibility="Visible">
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
+              <TextBlock Text="ЛОГИН" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,20">
+                <TextBox Name="LoginUsername" Background="Transparent" BorderThickness="0"
+                         FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"
+                         VerticalContentAlignment="Center"/>
+              </Border>
+              <TextBlock Text="ПАРОЛЬ" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                <Grid>
                   <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="28"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                   </Grid.ColumnDefinitions>
-                  <Path Data="{StaticResource IconApps}" Fill="#B8A8B8" Width="16" Height="16"
-                        Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                  <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-                    <TextBlock Text="Логин" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <TextBox Name="LoginUsername" Background="Transparent" BorderThickness="0"
-                             FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                             Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
+                  <PasswordBox Name="LoginPassword" Background="Transparent" BorderThickness="0"
+                               FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"
+                               VerticalContentAlignment="Center"/>
+                  <TextBox Name="LoginPasswordVisible" Background="Transparent" BorderThickness="0"
+                           FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"
+                           VerticalContentAlignment="Center" Visibility="Collapsed"/>
+                  <Button Grid.Column="1" Width="28" Height="28" Background="Transparent" BorderThickness="0"
+                          Cursor="Hand" Click="BtnToggleLoginPassword_Click"
+                          Style="{StaticResource NoHoverButtonStyle}" ToolTip="Показать пароль"
+                          VerticalAlignment="Center">
+                    <Path Width="16" Height="16" Stretch="Uniform" Stroke="#A299B8" StrokeThickness="1.6"
+                          Fill="Transparent"
+                          Data="M1.5,8 C3,4.5 5.5,3 8,3 C10.5,3 13,4.5 14.5,8 C13,11.5 10.5,13 8,13 C5.5,13 3,11.5 1.5,8 Z M8,6 A2,2 0 1 0 8,10 A2,2 0 1 0 8,6 Z"/>
+                  </Button>
                 </Grid>
               </Border>
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
-                  <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="28"/>
-                    <ColumnDefinition Width="*"/>
-                  </Grid.ColumnDefinitions>
-                  <Path Data="{StaticResource IconLock}" Fill="#B8A8B8" Width="16" Height="16"
-                        Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                  <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-                    <TextBlock Text="Пароль" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <PasswordBox Name="LoginPassword" Background="Transparent" BorderThickness="0"
-                                 FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                                 Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
-                </Grid>
-              </Border>
-              <Button Content="Забыли пароль?" HorizontalAlignment="Right" Margin="0,-4,0,8"
-                      Background="Transparent" Foreground="#B8A8B8" BorderThickness="0"
-                      FontSize="12" Cursor="Hand" Click="ShowRecovery_Click"
-                      Style="{StaticResource NoHoverButtonStyle}"/>
-              <Button Content="Войти" Style="{StaticResource OldActionButtonStyle}" Click="BtnLogin_Click"/>
-              <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
-                <TextBlock Text="Нет аккаунта?" Foreground="#888" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                <Button Content="Регистрация" Style="{StaticResource NoHoverButtonStyle}"
-                        FontSize="13" FontWeight="SemiBold" Foreground="#FF5ED7" Click="ShowRegister_Click"/>
-              </StackPanel>
+              <Button Content="Войти" Style="{StaticResource OldActionButtonStyle}"
+                      Click="BtnLogin_Click" Margin="0,0,0,16"/>
+              <Grid>
+                <Button Content="Забыли пароль?" HorizontalAlignment="Left"
+                        Background="Transparent" Foreground="#A299B8" BorderThickness="0"
+                        FontSize="12" Cursor="Hand" Click="ShowRecovery_Click"
+                        Style="{StaticResource NoHoverButtonStyle}"/>
+                <Button Content="Регистрация" HorizontalAlignment="Right"
+                        Background="Transparent" Foreground="#BF5AF2" BorderThickness="0"
+                        FontSize="12" FontWeight="SemiBold" Cursor="Hand" Click="ShowRegister_Click"
+                        Style="{StaticResource NoHoverButtonStyle}"/>
+              </Grid>
             </StackPanel>
 
             <StackPanel Name="RegisterPanel" Visibility="Collapsed">
-              <TextBlock Text="Регистрация" Foreground="#FFFFFFFF" FontSize="18" FontWeight="SemiBold"
-                         Margin="0,0,0,16" HorizontalAlignment="Center"/>
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
-                  <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Email" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <TextBox Name="RegEmail" Background="Transparent" BorderThickness="0"
-                             FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                             Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
-                </Grid>
+              <TextBlock Text="Регистрация" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                         Margin="0,0,0,20" HorizontalAlignment="Center"/>
+              <TextBlock Text="EMAIL" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                <TextBox Name="RegEmail" Background="Transparent" BorderThickness="0"
+                         FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
               </Border>
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
-                  <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Логин" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <TextBox Name="RegUsername" Background="Transparent" BorderThickness="0"
-                             FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                             Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
-                </Grid>
+              <TextBlock Text="ЛОГИН" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                <TextBox Name="RegUsername" Background="Transparent" BorderThickness="0"
+                         FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
               </Border>
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
-                  <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Пароль" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <PasswordBox Name="RegPassword" Background="Transparent" BorderThickness="0"
-                                 FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                                 Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
-                </Grid>
+              <TextBlock Text="ПАРОЛЬ" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                <PasswordBox Name="RegPassword" Background="Transparent" BorderThickness="0"
+                             FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
               </Border>
-              <Border Style="{StaticResource InputBorderStyle}">
-                <Grid Margin="14,0">
-                  <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Повторите пароль" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                    <PasswordBox Name="RegPasswordConfirm" Background="Transparent" BorderThickness="0"
-                                 FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                                 Padding="0" CaretBrush="#FF5ED7"/>
-                  </StackPanel>
-                </Grid>
+              <TextBlock Text="ПОВТОРИТЕ ПАРОЛЬ" Style="{StaticResource AuthFieldLabelStyle}"/>
+              <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                <PasswordBox Name="RegPasswordConfirm" Background="Transparent" BorderThickness="0"
+                             FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
               </Border>
               <Button Content="Создать аккаунт" Style="{StaticResource OldActionButtonStyle}" Click="BtnRegister_Click"/>
               <Button Content="Назад ко входу" Style="{StaticResource NoHoverButtonStyle}"
-                      Foreground="#B8A8B8" Margin="0,12,0,0" Click="ShowLogin_Click"/>
+                      Foreground="#A299B8" Margin="0,12,0,0" Click="ShowLogin_Click"/>
             </StackPanel>
 
             <StackPanel Name="RecoveryPanel" Visibility="Collapsed">
-              <TextBlock Text="Восстановление" Foreground="#FFFFFFFF" FontSize="18" FontWeight="SemiBold"
-                         Margin="0,0,0,16" HorizontalAlignment="Center"/>
+              <TextBlock Text="Восстановление" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                         Margin="0,0,0,20" HorizontalAlignment="Center"/>
               <StackPanel Name="RecStep1">
-                <Border Style="{StaticResource InputBorderStyle}">
-                  <Grid Margin="14,0">
-                    <StackPanel VerticalAlignment="Center">
-                      <TextBlock Text="Email" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                      <TextBox Name="RecEmail" Background="Transparent" BorderThickness="0"
-                               FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                               Padding="0" CaretBrush="#FF5ED7"/>
-                    </StackPanel>
-                  </Grid>
+                <TextBlock Text="EMAIL" Style="{StaticResource AuthFieldLabelStyle}"/>
+                <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                  <TextBox Name="RecEmail" Background="Transparent" BorderThickness="0"
+                           FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
                 </Border>
                 <Button Content="Отправить код" Style="{StaticResource OldActionButtonStyle}" Click="BtnSendCode_Click"/>
               </StackPanel>
               <StackPanel Name="RecStep2" Visibility="Collapsed">
-                <Border Style="{StaticResource InputBorderStyle}">
-                  <Grid Margin="14,0">
-                    <StackPanel VerticalAlignment="Center">
-                      <TextBlock Text="Код из письма" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                      <TextBox Name="RecCode" Background="Transparent" BorderThickness="0"
-                               FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                               Padding="0" CaretBrush="#FF5ED7"/>
-                    </StackPanel>
-                  </Grid>
+                <TextBlock Text="КОД ИЗ ПИСЬМА" Style="{StaticResource AuthFieldLabelStyle}"/>
+                <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                  <TextBox Name="RecCode" Background="Transparent" BorderThickness="0"
+                           FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
                 </Border>
-                <Border Style="{StaticResource InputBorderStyle}">
-                  <Grid Margin="14,0">
-                    <StackPanel VerticalAlignment="Center">
-                      <TextBlock Text="Новый пароль" Foreground="{StaticResource TextGrayBrush}" FontSize="10" FontWeight="SemiBold"/>
-                      <PasswordBox Name="RecNewPassword" Background="Transparent" BorderThickness="0"
-                                   FontSize="15" FontWeight="SemiBold" Foreground="#FFFFFFFF"
-                                   Padding="0" CaretBrush="#FF5ED7"/>
-                    </StackPanel>
-                  </Grid>
+                <TextBlock Text="НОВЫЙ ПАРОЛЬ" Style="{StaticResource AuthFieldLabelStyle}"/>
+                <Border Style="{StaticResource InputBorderStyle}" Margin="0,0,0,16">
+                  <PasswordBox Name="RecNewPassword" Background="Transparent" BorderThickness="0"
+                               FontSize="14" Foreground="White" Padding="0" CaretBrush="#BF5AF2"/>
                 </Border>
                 <Button Content="Сменить пароль" Style="{StaticResource OldActionButtonStyle}" Click="BtnResetPass_Click"/>
               </StackPanel>
               <Button Content="Назад ко входу" Style="{StaticResource NoHoverButtonStyle}"
-                      Foreground="#B8A8B8" Margin="0,12,0,0" Click="ShowLogin_Click"/>
+                      Foreground="#A299B8" Margin="0,12,0,0" Click="ShowLogin_Click"/>
               <TextBlock Name="RecErrorText" Foreground="#FF8A8A" HorizontalAlignment="Center"
                          Margin="0,12,0,0" FontSize="13" TextWrapping="Wrap" TextAlignment="Center"/>
             </StackPanel>
@@ -571,9 +1075,6 @@
                        Margin="0,14,0,0" FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center"/>
           </StackPanel>
         </Border>
-
-        <Button Style="{StaticResource ChatAnimatedButtonStyle}" HorizontalAlignment="Right"
-                VerticalAlignment="Bottom" Margin="0,0,0,54" Click="BtnToggleChat_Click"/>
       </Grid>
       <Grid Name="LockScreenShopPanel" Visibility="Collapsed" Panel.ZIndex="600">
         <Panel.Background>
@@ -781,106 +1282,131 @@
         </Button>
       </Grid>
     </Grid>
-    <Grid Name="ChatOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Width="380" Height="520" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,24,24" Panel.ZIndex="1000">
-      <Border Background="#342735" CornerRadius="22" BorderBrush="#4FFFFFFF" BorderThickness="1">
-        <UIElement.Effect>
-          <DropShadowEffect Color="#FF5ED7" BlurRadius="28" ShadowDepth="0" Opacity="0.22" />
-        </UIElement.Effect>
+    <!-- Chat panel sits ABOVE the admin chat button -->
+    <Grid Name="ChatOverlay" Visibility="Collapsed"
+          Width="240" Height="380" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+          Margin="0,0,14,92" Panel.ZIndex="1000">
+      <Border Background="#4D000000" CornerRadius="10" BorderBrush="#1FFFFFFF" BorderThickness="1" ClipToBounds="True">
         <Grid>
           <Grid.RowDefinitions>
-            <RowDefinition Height="64" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="72" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
           </Grid.RowDefinitions>
-          <Border Grid.Row="0" Background="#3C2F3D" CornerRadius="22,22,0,0" BorderBrush="#4FFFFFFF" BorderThickness="0,0,0,1">
-            <Grid Margin="20,0">
-              <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <Ellipse Width="10" Height="10" Fill="#FF5ED7" Margin="0,0,10,0" />
-                <TextBlock Text="Чат поддержки" Foreground="#FFFFFFFF" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
-              </StackPanel>
-              <Button HorizontalAlignment="Right" VerticalAlignment="Center" Width="32" Height="32" Background="#00FFFFFF" BorderThickness="0" Cursor="Hand" Click="BtnToggleChat_Click">
-                <Path Data="{StaticResource IconClose}" Fill="#FFFFFFFF" Stretch="Uniform" Width="12" Height="12" />
-                <Button.Template>
-                  <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Name="CloseBg" Background="#00FFFFFF" CornerRadius="16" Width="32" Height="32">
-                      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                      <Trigger Property="UIElement.IsMouseOver" Value="True">
-                        <Setter TargetName="CloseBg" Property="Border.Background" Value="#3C2F3D" />
-                      </Trigger>
-                    </ControlTemplate.Triggers>
-                  </ControlTemplate>
-                </Button.Template>
-              </Button>
-            </Grid>
-          </Border>
-          <ScrollViewer Name="ChatScrollViewer" Grid.Row="1" Style="{StaticResource ChatScrollViewer}" VerticalScrollBarVisibility="Auto" Margin="12,10">
+
+          <Grid Grid.Row="0" Margin="12,10,8,0">
+            <TextBlock Text="Чат" Foreground="#A299B8" FontSize="11" FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+            <Button HorizontalAlignment="Right" Width="24" Height="24" Cursor="Hand"
+                    Background="Transparent" BorderThickness="0" Click="BtnToggleChat_Click"
+                    ToolTip="Закрыть">
+              <Button.Template>
+                <ControlTemplate TargetType="Button">
+                  <Border Background="Transparent" Width="24" Height="24">
+                    <Path Data="{StaticResource IconClose}" Fill="#A299B8" Stretch="Uniform"
+                          Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                  </Border>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+          </Grid>
+
+          <ScrollViewer Name="ChatScrollViewer" Grid.Row="1"
+                        VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                        Margin="10,8,10,4" Padding="0">
             <ItemsControl Name="ChatList" ItemsSource="{Binding ChatMessagesItems}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                  <Grid Margin="6,5">
-                    <Border Background="#3C2F3D" BorderBrush="#4FFFFFFF" BorderThickness="1" CornerRadius="16,16,16,4" Padding="14,11" HorizontalAlignment="Left" MaxWidth="280" Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
-                      <TextBlock Foreground="#FFFFFFFF" FontSize="14" TextWrapping="Wrap" Text="{Binding Text}" />
-                    </Border>
-                    <Border Background="#FF5ED7" CornerRadius="16,16,4,16" Padding="14,11" HorizontalAlignment="Right" MaxWidth="280" Visibility="{Binding IsUser, Converter={StaticResource BooleanToVisibilityConverter}}">
-                      <TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="Medium" TextWrapping="Wrap" Text="{Binding Text}" />
-                    </Border>
+                  <Grid Margin="0,0,0,12">
+                    <StackPanel HorizontalAlignment="Left" MaxWidth="200"
+                                Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                      <TextBlock Text="Админ" Foreground="#A299B8" FontSize="10" Margin="2,0,0,4"/>
+                      <Border Background="#4D000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                              CornerRadius="8" Padding="12,8" HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding Text}" Foreground="White" FontSize="12"
+                                   TextWrapping="Wrap"/>
+                      </Border>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Right" MaxWidth="200"
+                                Visibility="{Binding IsUser, Converter={StaticResource BooleanToVisibilityConverter}}">
+                      <TextBlock Text="Вы" Foreground="#D275BF" FontSize="10"
+                                 HorizontalAlignment="Right" Margin="0,0,2,4">
+                        <TextBlock.Effect>
+                          <DropShadowEffect Color="#CB3EAE" BlurRadius="4" ShadowDepth="0" Opacity="0.85"/>
+                        </TextBlock.Effect>
+                      </TextBlock>
+                      <Border Background="#4D000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                              CornerRadius="8" Padding="12,8" HorizontalAlignment="Right">
+                        <TextBlock Text="{Binding Text}" Foreground="White" FontSize="12"
+                                   TextWrapping="Wrap"/>
+                      </Border>
+                    </StackPanel>
                   </Grid>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
           </ScrollViewer>
-          <Border Grid.Row="2" Background="#3C2F3D" CornerRadius="0,0,22,22" BorderBrush="#4FFFFFFF" BorderThickness="0,1,0,0" Padding="12,10">
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="48" />
-              </Grid.ColumnDefinitions>
-              <Border Grid.Column="0" Background="#342735" CornerRadius="14" BorderBrush="#4FFFFFFF" BorderThickness="1" Margin="0,0,8,0">
-                <Grid>
-                  <TextBox Name="ChatInput" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" FontSize="14" CaretBrush="#FF5ED7" VerticalAlignment="Center" Padding="14,0" Height="44" VerticalContentAlignment="Center" KeyDown="ChatInput_KeyDown" />
-                  <TextBlock Text="Сообщение..." IsHitTestVisible="False" Foreground="#4FFFFFFF" FontSize="14" VerticalAlignment="Center" Margin="14,0,0,0">
-                    <FrameworkElement.Style>
-                      <Style TargetType="{x:Type TextBlock}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                          <DataTrigger Value="" Binding="{Binding Text, ElementName=ChatInput}">
-                            <Setter Property="Visibility" Value="Visible" />
-                          </DataTrigger>
-                        </Style.Triggers>
-                      </Style>
-                    </FrameworkElement.Style>
-                  </TextBlock>
-                </Grid>
-              </Border>
-              <Button Grid.Column="1" Width="44" Height="44" Cursor="Hand" ToolTip="Отправить" Click="BtnSendMessage_Click">
-                <Button.Template>
-                  <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Name="SendBg" Background="#FF5ED7" CornerRadius="14">
-                      <Path Data="{StaticResource IconSend}" Fill="#FFFFFFFF" Stretch="Uniform" Width="18" Height="18" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0,0,0">
-                        <UIElement.RenderTransform>
-                          <RotateTransform Angle="-30" CenterX="9" CenterY="9" />
-                        </UIElement.RenderTransform>
-                      </Path>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                      <Trigger Property="UIElement.IsMouseOver" Value="True">
-                        <Setter TargetName="SendBg" Property="UIElement.Opacity" Value="0.88" />
-                      </Trigger>
-                      <Trigger Property="ButtonBase.IsPressed" Value="True">
-                        <Setter TargetName="SendBg" Property="UIElement.Opacity" Value="0.75" />
-                      </Trigger>
-                    </ControlTemplate.Triggers>
-                  </ControlTemplate>
-                </Button.Template>
-              </Button>
-            </Grid>
-          </Border>
+
+          <Grid Grid.Row="2" Margin="10,0,10,10">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="36"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="#33000000" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                    CornerRadius="8" Height="34" Margin="0,0,6,0" VerticalAlignment="Center">
+              <Grid>
+                <TextBox Name="ChatInput" Background="Transparent" BorderThickness="0"
+                         Foreground="White" FontSize="12" CaretBrush="#D275BF"
+                         VerticalContentAlignment="Center" Padding="10,0"
+                         KeyDown="ChatInput_KeyDown"/>
+                <TextBlock Text="Сообщение..." IsHitTestVisible="False"
+                           Foreground="#66A299B8" FontSize="12"
+                           VerticalAlignment="Center" Margin="10,0,0,0">
+                  <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                      <Setter Property="Visibility" Value="Collapsed"/>
+                      <Style.Triggers>
+                        <DataTrigger Binding="{Binding Text, ElementName=ChatInput}" Value="">
+                          <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                      </Style.Triggers>
+                    </Style>
+                  </TextBlock.Style>
+                </TextBlock>
+              </Grid>
+            </Border>
+            <Button Grid.Column="1" Width="36" Height="36" Cursor="Hand" ToolTip="Отправить"
+                    Background="Transparent" BorderThickness="0" Click="BtnSendMessage_Click"
+                    VerticalAlignment="Center">
+              <Button.Template>
+                <ControlTemplate TargetType="Button">
+                  <Grid Background="Transparent">
+                    <Path x:Name="SendIcon" Data="{StaticResource IconSend}"
+                          Fill="#D275BF" Stretch="Uniform" Width="18" Height="18"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          RenderTransformOrigin="0.5,0.5">
+                      <Path.RenderTransform>
+                        <RotateTransform Angle="20"/>
+                      </Path.RenderTransform>
+                      <Path.Effect>
+                        <DropShadowEffect Color="#CB3EAE" BlurRadius="6" ShadowDepth="0" Opacity="0.7"/>
+                      </Path.Effect>
+                    </Path>
+                  </Grid>
+                  <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                      <Setter TargetName="SendIcon" Property="Fill" Value="#FF5ED7"/>
+                    </Trigger>
+                  </ControlTemplate.Triggers>
+                </ControlTemplate>
+              </Button.Template>
+            </Button>
+          </Grid>
         </Grid>
       </Border>
     </Grid>
-    <Grid Name="PaymentOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Background="#CC000000" Panel.ZIndex="1000">
+    <Grid Name="PaymentOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#CC000000" Panel.ZIndex="1000">
       <Border Width="800" Height="600" Background="{StaticResource AppBackgroundBrush}" CornerRadius="20" BorderBrush="{StaticResource AccentGoldBrush}" BorderThickness="1" ClipToBounds="True">
         <Grid>
           <Grid.RowDefinitions>
@@ -895,34 +1421,71 @@
         </Grid>
       </Border>
     </Grid>
-    <Grid Name="InputOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Background="#CC000000" Panel.ZIndex="1000">
-      <Border Width="500" Height="250" Background="{StaticResource PanelGlassBrush}" CornerRadius="20" BorderBrush="{StaticResource AccentGoldBrush}" BorderThickness="1" Padding="30">
+    <Grid Name="ClubMapOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#CC040208" Panel.ZIndex="1100">
+      <Border Width="980" Height="680" Background="#F00A0612" CornerRadius="12" BorderBrush="#1FFFFFFF" BorderThickness="1" ClipToBounds="True">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+          </Grid.RowDefinitions>
+          <Grid Background="#0AFFFFFF">
+            <TextBlock Text="Карта клуба — выбрать ПК" Foreground="White" FontSize="16" FontWeight="SemiBold"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0"/>
+            <Button Content="✕" HorizontalAlignment="Right" Width="50" Height="50"
+                    Background="Transparent" Foreground="#A299B8" BorderThickness="0"
+                    Style="{StaticResource NoHoverButtonStyle}" Click="BtnCloseClubMap_Click"/>
+          </Grid>
+          <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,12,20,8">
+            <Ellipse Width="10" Height="10" Fill="#3DDC97" Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <TextBlock Text="Свободен" Foreground="#A299B8" FontSize="12" Margin="0,0,16,0" VerticalAlignment="Center"/>
+            <Ellipse Width="10" Height="10" Fill="#FF5ED7" Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <TextBlock Text="Занят" Foreground="#A299B8" FontSize="12" Margin="0,0,16,0" VerticalAlignment="Center"/>
+            <Ellipse Width="10" Height="10" Fill="#666" Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <TextBlock Text="Оффлайн" Foreground="#A299B8" FontSize="12" Margin="0,0,16,0" VerticalAlignment="Center"/>
+            <Ellipse Width="10" Height="10" Fill="#4FC3F7" Margin="0,0,6,0" VerticalAlignment="Center"/>
+            <TextBlock Text="Вы здесь" Foreground="#A299B8" FontSize="12" VerticalAlignment="Center"/>
+            <Button Content="Обновить" HorizontalAlignment="Right" Margin="24,0,0,0" Padding="12,6"
+                    Background="#14FFFFFF" Foreground="White" BorderBrush="#1FFFFFFF" BorderThickness="1"
+                    Cursor="Hand" Click="BtnRefreshClubMap_Click"/>
+          </StackPanel>
+          <Border Grid.Row="2" Margin="16,0,16,8" Background="#08050C" CornerRadius="10" BorderBrush="#1FFFFFFF" BorderThickness="1" ClipToBounds="True">
+            <Canvas Name="ClubMapCanvas" SizeChanged="ClubMapCanvas_SizeChanged"/>
+          </Border>
+          <TextBlock Grid.Row="3" Name="ClubMapHint" Text="Нажмите на свободный ПК, чтобы перенести сессию"
+                     Foreground="#A299B8" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+      </Border>
+    </Grid>
+    <Grid Name="InputOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#CC040208" Panel.ZIndex="1000">
+      <Border Width="480" MinHeight="220" Background="#F00A0612" CornerRadius="12" BorderBrush="#1FFFFFFF" BorderThickness="1" Padding="28">
         <StackPanel>
-          <TextBlock Name="InputTitle" Text="Заголовок" Foreground="#FFFFFFFF" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10" />
-          <TextBlock Name="InputMessage" Text="Сообщение" Foreground="#FF808080" HorizontalAlignment="Center" Margin="0,0,0,20" />
-          <Border CornerRadius="10" Background="#30FFFFFF" Margin="0,0,0,20">
-            <TextBox Name="InputTextBox" Background="#00FFFFFF" BorderThickness="0" Foreground="#FFFFFFFF" FontSize="18" Padding="10" TextAlignment="Center" />
+          <TextBlock Name="InputTitle" Text="Заголовок" Foreground="White" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,8" />
+          <TextBlock Name="InputMessage" Text="Сообщение" Foreground="#A299B8" HorizontalAlignment="Center" Margin="0,0,0,18" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" />
+          <Border CornerRadius="8" Background="#14FFFFFF" BorderBrush="#1FFFFFFF" BorderThickness="1" Margin="0,0,0,20" Height="42" Padding="12,0">
+            <TextBox Name="InputTextBox" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="15" CaretBrush="#BF5AF2" VerticalContentAlignment="Center" TextAlignment="Center" />
           </Border>
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Отмена" Width="100" Height="40" Background="#00FFFFFF" BorderBrush="#FF808080" BorderThickness="1" Foreground="#FFFFFFFF" Margin="0,0,10,0" Style="{StaticResource ModalButton}" Opacity="0.7" Click="BtnInputCancel_Click" />
-            <Button Content="ОК" Width="100" Height="40" Style="{StaticResource ModalButton}" Click="BtnInputOk_Click" />
+            <Button Content="Отмена" Width="110" Height="38" Margin="0,0,10,0" Style="{StaticResource ModalButtonSecondary}" Click="BtnInputCancel_Click" />
+            <Button Content="ОК" Width="110" Height="38" Style="{StaticResource ModalButton}" Click="BtnInputOk_Click" />
           </StackPanel>
         </StackPanel>
       </Border>
     </Grid>
-    <Grid Name="ConfirmationOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Background="#CC000000" Panel.ZIndex="1000">
-      <Border Width="500" Height="200" Background="{StaticResource PanelGlassBrush}" CornerRadius="20" BorderBrush="{StaticResource AccentGoldBrush}" BorderThickness="1" Padding="30">
+    <Grid Name="ConfirmationOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#CC040208" Panel.ZIndex="1000">
+      <Border Width="480" MinHeight="180" Background="#F00A0612" CornerRadius="12" BorderBrush="#1FFFFFFF" BorderThickness="1" Padding="28">
         <StackPanel>
-          <TextBlock Name="MsgTitle" Text="Подтверждение" Foreground="#FFFFFFFF" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10" />
-          <TextBlock Name="MsgContent" Text="?" Foreground="#FF808080" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,25" />
+          <TextBlock Name="MsgTitle" Text="Подтверждение" Foreground="White" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,10" />
+          <TextBlock Name="MsgContent" Text="?" Foreground="#A299B8" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" FontSize="13" Margin="0,0,0,22" />
           <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Name="BtnMsgNo" Content="Нет" Width="100" Height="40" Background="#00FFFFFF" BorderBrush="#FF808080" BorderThickness="1" Foreground="#FFFFFFFF" Margin="0,0,10,0" Style="{StaticResource ModalButton}" Opacity="0.7" Click="BtnMsgClose_Click" />
-            <Button Name="BtnMsgYes" Content="Да" Width="100" Height="40" Style="{StaticResource ModalButton}" Click="BtnMsgYes_Click" />
+            <Button Name="BtnMsgNo" Content="Нет" Width="110" Height="38" Margin="0,0,10,0" Style="{StaticResource ModalButtonSecondary}" Click="BtnMsgClose_Click" />
+            <Button Name="BtnMsgYes" Content="Да" Width="110" Height="38" Style="{StaticResource ModalButton}" Click="BtnMsgYes_Click" />
           </StackPanel>
         </StackPanel>
       </Border>
     </Grid>
-    <Grid Name="IdleOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Background="#FF000000" Panel.ZIndex="2000">
+    <Grid Name="IdleOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#FF000000" Panel.ZIndex="2000">
       <Image Source="pack://application:,,,/Images/background_waves.png" Stretch="UniformToFill" />
       <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60">
         <TextBlock Text="Компьютер" Foreground="#888" FontSize="24" FontWeight="Light" />
@@ -943,7 +1506,7 @@
         <TextBlock Name="IdleDateText" Text="1 января" Foreground="#CCC" FontSize="36" HorizontalAlignment="Right" Margin="0,-20,5,0" />
       </StackPanel>
     </Grid>
-    <Grid Name="PendingApprovalOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="2" Visibility="Collapsed" Background="#EE241820" Panel.ZIndex="3000">
+    <Grid Name="PendingApprovalOverlay" Row="0" RowSpan="2" Column="0" ColumnSpan="3" Visibility="Collapsed" Background="#EE241820" Panel.ZIndex="3000">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <Image Source="pack://application:,,,/Images/logo.png" Width="180" Margin="0,0,0,40" RenderOptions.BitmapScalingMode="HighQuality">
           <UIElement.Effect>
@@ -962,7 +1525,7 @@
         </Border>
       </StackPanel>
     </Grid>
-    <Border Name="OfflineIndicator" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Collapsed" Panel.ZIndex="2500" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,80,20,0" Background="#EE1A1A1A" CornerRadius="10" Padding="15,10">
+    <Border Name="OfflineIndicator" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" Visibility="Collapsed" Panel.ZIndex="2500" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,80,20,0" Background="#EE1A1A1A" CornerRadius="10" Padding="15,10">
       <StackPanel Orientation="Horizontal">
         <TextBlock Text="⚠️" FontSize="18" VerticalAlignment="Center" Margin="0,0,10,0" />
         <StackPanel>

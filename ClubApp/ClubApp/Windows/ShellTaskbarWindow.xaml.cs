@@ -79,6 +79,28 @@ namespace AetherShell.Client
             _instance.Hide();
         }
 
+        public static void ApplyHighAccessLook(bool enabled)
+        {
+            if (_instance == null) return;
+            try
+            {
+                if (_instance.Content is Border border)
+                {
+                    border.Background = enabled
+                        ? new System.Windows.Media.SolidColorBrush(
+                            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#CC2A2A2E"))
+                        : new System.Windows.Media.SolidColorBrush(
+                            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#05FFFFFF"));
+                    border.BorderBrush = enabled
+                        ? new System.Windows.Media.SolidColorBrush(
+                            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#555558"))
+                        : new System.Windows.Media.SolidColorBrush(
+                            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#14FFFFFF"));
+                }
+            }
+            catch { }
+        }
+
         private void PositionBar()
         {
             Width = SystemParameters.PrimaryScreenWidth;

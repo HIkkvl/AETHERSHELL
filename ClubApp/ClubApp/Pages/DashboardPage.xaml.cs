@@ -1,4 +1,5 @@
 using AetherShell.Client.Models;
+using AetherShell.Client.Services;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,7 @@ namespace AetherShell.Client.Pages
                 var allApps = await api.GetAppsAsync();
                 if (allApps != null)
                 {
+                    LocalAppOverrides.ApplyTo(allApps);
                     var gamesOnly = allApps.Where(x => x.Category == "Game").Take(10).ToList();
                     NewGamesList.ItemsSource = gamesOnly;
                 }
